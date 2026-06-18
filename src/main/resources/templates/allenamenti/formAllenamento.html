@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${isNuovo} ? 'Nuovo allenamento' : 'Modifica allenamento'">Form</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h1 th:text="${isNuovo} ? 'Registra nuovo allenamento' : 'Modifica allenamento'">Form</h1>
+
+<form th:action="${isNuovo} ? @{/allenamenti/nuovo} : @{/allenamenti/{id}/modifica(id=${allenamento.id})}"
+      th:object="${allenamento}"
+      method="post">
+
+    <div>
+        <label>Titolo</label><br/>
+        <input type="text" th:field="*{allenamento.titolo}" placeholder="es. Ripetute 10km" required/>
+    </div><br/>
+
+    <div>
+        <label>Data</label><br/>
+        <input type="date" th:field="*{allenamento.data}" required/>
+    </div><br/>
+
+    <div>
+        <label>Distanza (km)</label><br/>
+        <input type="number" th:field="*{allenamento.distanzaInKm}" step="0.1" min="0" required/>
+    </div><br/>
+
+    <div>
+        <label>Tipo di allenamento</label><br/>
+        <select th:field="*{allenamento.tipoDiAllenamento}">
+            <option value="">-- Seleziona --</option>
+            <option th:each="tipo : ${tipi}"
+                    th:value="${tipo}"
+                    th:text="${tipo}">Tipo</option>
+        </select>
+    </div><br/>
+
+    <div>
+        <label>Scarpa utilizzata (opzionale)</label><br/>
+        <select name="scarpaId">
+            <option value="">— Nessuna scarpa —</option>
+            <option th:each="s : ${scarpe}"
+                    th:value="${s.id}"
+                    th:selected="${allenamento.scarpa != null && allenamento.scarpa.id == s.id}"
+                    th:text="${s.marca} + ' ' + ${s.modello} + ' (' + ${s.kmTotali} + ' km)'">
+                Scarpa
+            </option>
+        </select>
+    </div><br/>
+
+    <button type="submit" th:text="${isNuovo} ? 'Salva allenamento' : 'Salva modifiche'">Salva</button>
+    &nbsp;
+    <a th:href="${isNuovo} ? '/profilo' : '/allenamenti/' + ${allenamento.id}">Annulla</a>
+</form>
+
+</body>
+</html>

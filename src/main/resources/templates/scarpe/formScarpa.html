@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Aggiungi scarpa</title>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<h1>Aggiungi una scarpa</h1>
+
+<form th:action="@{/scarpe/nuova}" th:object="${scarpa}" method="post">
+
+    <label>Marca
+        <input type="text" th:field="*{scarpa.marca}" placeholder="es. Brooks, Nike, Saucony" required/>
+    </label><br/>
+
+    <label>Modello
+        <input type="text" th:field="*{scarpa.modello}" placeholder="es. Ghost 16, Endorphin Speed 4" required/>
+    </label><br/>
+
+    <label>Km massimi consigliati
+        <input type="number" th:field="*{scarpa.kmMassimi}" step="10" min="100" placeholder="es. 700" required/>
+    </label><br/>
+
+    <button type="submit">Salva scarpa</button>
+    <a href="/profilo">Annulla</a>
+</form>
+
+</body>
+</html>

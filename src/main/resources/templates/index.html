@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SIW Corsa</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h1>🏃 Benvenuto su SIW Corsa</h1>
+<p>Traccia i tuoi allenamenti, monitora le scarpe e commenta le uscite dei tuoi amici.</p>
+
+<!-- Utente NON loggato -->
+<div th:unless="${userDetails}">
+    <h2>Inizia subito</h2>
+    <a href="/register"><button>Registrati</button></a>
+    &nbsp;
+    <a href="/login"><button>Accedi</button></a>
+</div>
+
+<!-- Utente loggato -->
+<div th:if="${userDetails}">
+    <h2 th:text="'Ciao ' + ${utente.nome} + ', cosa vuoi fare oggi?'">Ciao!</h2>
+    <ul>
+        <li><a href="/profilo">📋 Il mio profilo e i miei allenamenti</a></li>
+        <li><a href="/allenamenti/nuovo">➕ Registra un nuovo allenamento</a></li>
+        <li><a href="/scarpe/nuova">👟 Aggiungi una scarpa</a></li>
+    </ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${allenamento.titolo}">Dettaglio allenamento</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<a href="/profilo">← Torna al profilo</a>
+
+<h1 th:text="${allenamento.titolo}">Titolo</h1>
+
+<table border="1">
+    <tr><th>Data</th><td th:text="${#temporals.format(allenamento.data, 'dd/MM/yyyy')}">data</td></tr>
+    <tr><th>Tipo</th><td th:text="${allenamento.tipoDiAllenamento}">Z2</td></tr>
+    <tr><th>Distanza</th><td th:text="${allenamento.distanzaInKm} + ' km'">10 km</td></tr>
+    <tr><th>Atleta</th><td th:text="${allenamento.atleta.nome} + ' ' + ${allenamento.atleta.cognome}">Nome</td></tr>
+</table>
+
+<!-- Scarpa -->
+<div th:if="${allenamento.scarpa != null}">
+    <h3>👟 Scarpa utilizzata</h3>
+    <p th:text="${allenamento.scarpa.marca} + ' ' + ${allenamento.scarpa.modello}">Scarpa</p>
+    <p>Km attuali:
+        <span th:text="${allenamento.scarpa.kmTotali}">0</span> /
+        <span th:text="${allenamento.scarpa.kmMassimi}">700</span> km
+    </p>
+</div>
+
+<!-- Azioni -->
+<p>
+    <a th:href="@{/allenamenti/{id}/modifica(id=${allenamento.id})}"><button>✏ Modifica</button></a>
+    &nbsp;
+<form th:action="@{/allenamenti/{id}/elimina(id=${allenamento.id})}"
+      method="post" style="display:inline"
+      onsubmit="return confirm('Eliminare questo allenamento e tutti i suoi commenti?')">
+    <button type="submit">🗑 Elimina</button>
+</form>
+</p>
+
+<hr/>
+
+<!-- Commenti -->
+<h2>💬 Commenti (<span th:text="${#lists.size(allenamento.commenti)}">0</span>)</h2>
+
+<div th:each="c : ${allenamento.commenti}">
+    <p>
+        <strong th:text="${c.autore.nome} + ' ' + ${c.autore.cognome}">Autore</strong>
+        — <em th:text="${#temporals.format(c.dataOra, 'dd/MM/yyyy HH:mm')}">data</em>
+    </p>
+    <p th:text="${c.testo}">Testo</p>
+    <hr/>
+</div>
+
+<p th:if="${#lists.isEmpty(allenamento.commenti)}">Nessun commento ancora. Sii il primo!</p>
+
+<!-- Form commento -->
+<h3>Aggiungi un commento</h3>
+<form th:action="@{/allenamenti/{id}/commenti(id=${allenamento.id})}" method="post">
+    <textarea name="testo" rows="3" cols="50"
+              placeholder="Scrivi il tuo commento..." required></textarea><br/>
+    <button type="submit">Commenta</button>
+</form>
+
+</body>
+</html>

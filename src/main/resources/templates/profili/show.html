@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Il mio profilo</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h1 th:text="${utente.nome} + ' ' + ${utente.cognome}">Nome Atleta</h1>
+<p th:text="${utente.email}">email@esempio.it</p>
+
+<!-- Sezione scarpe -->
+<h2>👟 Le mie scarpe</h2>
+<a href="/scarpe/nuova"><button>+ Aggiungi scarpa</button></a>
+
+<div th:if="${#lists.isEmpty(scarpe)}">
+    <p>Nessuna scarpa registrata.</p>
+</div>
+<table th:unless="${#lists.isEmpty(scarpe)}" border="1">
+    <thead>
+    <tr>
+        <th>Marca</th><th>Modello</th><th>Km totali</th><th>Km massimi</th><th>Stato</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="s : ${scarpe}">
+        <td th:text="${s.marca}">Marca</td>
+        <td th:text="${s.modello}">Modello</td>
+        <td th:text="${s.kmTotali}">0</td>
+        <td th:text="${s.kmMassimi}">700</td>
+        <td>
+            <span th:if="${s.kmTotali >= s.kmMassimi}" style="color:red">⚠ Da sostituire!</span>
+            <span th:unless="${s.kmTotali >= s.kmMassimi}" style="color:green">✓ OK</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<hr/>
+
+<!-- Sezione allenamenti -->
+<h2>🏃 I miei allenamenti</h2>
+<a href="/allenamenti/nuovo"><button>+ Nuovo allenamento</button></a>
+
+<div th:if="${#lists.isEmpty(allenamenti)}">
+    <p>Nessun allenamento registrato. <a href="/allenamenti/nuovo">Aggiungine uno!</a></p>
+</div>
+
+<table th:unless="${#lists.isEmpty(allenamenti)}" border="1">
+    <thead>
+    <tr>
+        <th>Data</th><th>Titolo</th><th>Tipo</th><th>Km</th><th>Scarpa</th><th>Azioni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="a : ${allenamenti}">
+        <td th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</td>
+        <td>
+            <a th:href="@{/allenamenti/{id}(id=${a.id})}"
+               th:text="${a.titolo}">Titolo</a>
+        </td>
+        <td th:text="${a.tipoDiAllenamento}">Z2</td>
+        <td th:text="${a.distanzaInKm} + ' km'">10 km</td>
+        <td th:text="${a.scarpa != null ? a.scarpa.marca + ' ' + a.scarpa.modello : '—'}">—</td>
+        <td>
+            <a th:href="@{/allenamenti/{id}/modifica(id=${a.id})}">✏ Modifica</a>
+            &nbsp;
+            <form th:action="@{/allenamenti/{id}/elimina(id=${a.id})}"
+                  method="post" style="display:inline"
+                  onsubmit="return confirm('Eliminare questo allenamento e tutti i suoi commenti?')">
+                <button type="submit">🗑 Elimina</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

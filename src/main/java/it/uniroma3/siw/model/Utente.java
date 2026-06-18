@@ -1,6 +1,9 @@
 package it.uniroma3.siw.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -11,8 +14,14 @@ public class Utente {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank
     private String nome;
+
+    @NotBlank
     private String cognome;
+
+    @NotBlank
+    @Email
     private String email;
 
     // Un utente può avere molte scarpe nel suo parco scarpe

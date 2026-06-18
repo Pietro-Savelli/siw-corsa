@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Header riutilizzabile in tutte le pagine -->
+<header th:fragment="header">
+  <nav>
+    <a href="/">🏃 SIW Corsa</a>
+    &nbsp;|&nbsp;
+    <div th:if="${userDetails}" style="display:inline">
+      <span>Ciao, <strong th:text="${utente != null ? utente.nome : userDetails.username}">Utente</strong></span>
+      &nbsp;|&nbsp;
+      <a href="/profilo">Il mio profilo</a>
+      &nbsp;|&nbsp;
+      <form th:action="@{/logout}" method="post" style="display:inline">
+        <button type="submit">Logout</button>
+      </form>
+    </div>
+    <div th:unless="${userDetails}" style="display:inline">
+      <a href="/login">Login</a>
+      &nbsp;|&nbsp;
+      <a href="/register">Registrati</a>
+    </div>
+  </nav>
+  <hr/>
+</header>
+
+</body>
+</html>
