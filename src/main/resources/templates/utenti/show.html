@@ -62,7 +62,7 @@
     <tr th:each="a : ${allenamenti}">
         <td th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</td>
         <td>
-            <a th:href="@{/allenamenti/{id}(id=${a.id})}"
+            <a th:href="@{/allenamenti/{id}/globale(id=${a.id})}"
                th:text="${a.titolo}">Titolo</a>
         </td>
         <td th:text="${a.tipoDiAllenamento}">Z2</td>
