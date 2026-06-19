@@ -1,6 +1,8 @@
 package it.uniroma3.siw.model;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +15,7 @@ public class Allenamento {
     private Long id;
 
     private String titolo; // es. "Ripetute sui 10km" o "Lungo z2"
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
     private float distanzaInKm;
     private String tipoDiAllenamento;

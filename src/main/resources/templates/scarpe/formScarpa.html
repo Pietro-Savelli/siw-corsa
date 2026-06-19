@@ -11,15 +11,15 @@
 <form th:action="@{/scarpe/nuova}" th:object="${scarpa}" method="post">
 
     <label>Marca
-        <input type="text" th:field="*{scarpa.marca}" placeholder="es. Brooks, Nike, Saucony" required/>
+        <input type="text" th:field="*{marca}" placeholder="es. Brooks, Nike, Saucony" required/>
     </label><br/>
 
     <label>Modello
-        <input type="text" th:field="*{scarpa.modello}" placeholder="es. Ghost 16, Endorphin Speed 4" required/>
+        <input type="text" th:field="*{modello}" placeholder="es. Ghost 16, Endorphin Speed 4" required/>
     </label><br/>
 
     <label>Km massimi consigliati
-        <input type="number" th:field="*{scarpa.kmMassimi}" step="10" min="100" placeholder="es. 700" required/>
+        <input type="number" th:field="*{kmMassimi}" step="10" min="100" placeholder="es. 700" required/>
     </label><br/>
 
     <button type="submit">Salva scarpa</button>

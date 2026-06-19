@@ -1,9 +1,11 @@
 package it.uniroma3.siw.controller;
 
 import it.uniroma3.siw.model.Allenamento;
+import it.uniroma3.siw.model.Commento;
 import it.uniroma3.siw.model.Credentials;
 import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.service.AllenamentoService;
+import it.uniroma3.siw.service.CommentoService;
 import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.service.ScarpaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @Controller
 @RequestMapping("/allenamenti")
 public class AllenamentoController {
@@ -19,6 +23,7 @@ public class AllenamentoController {
     @Autowired private AllenamentoService allenamentoService;
     @Autowired private ScarpaService scarpaService;
     @Autowired private CredentialsService credentialsService;
+    @Autowired private CommentoService commentoService;
 
     private Utente getUtenteCorrente() {
         UserDetails ud = HomeController.getUserDetails();
@@ -89,5 +94,20 @@ public class AllenamentoController {
     public String elimina(@PathVariable Long id) {
         allenamentoService.elimina(id);
         return "redirect:/profilo";
+    }
+
+    //Salva commento
+    @PostMapping("/{id}/commenti")
+    public String salvaCommento(@PathVariable("id") Long id, @RequestParam("testo") String testo) {
+        Allenamento allenamento = allenamentoService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Allenamento non trovato: " + id));
+        Commento nuovoCommento = new Commento();
+        nuovoCommento.setTesto(testo);
+        nuovoCommento.setAllenamento(allenamento);
+        nuovoCommento.setAutore(getUtenteCorrente());
+        nuovoCommento.setDataOra(LocalDateTime.now());
+
+        commentoService.salva(nuovoCommento);
+        return "redirect:/allenamenti/" + id;
     }
 }

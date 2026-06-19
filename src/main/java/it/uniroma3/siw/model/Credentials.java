@@ -19,7 +19,7 @@ public class Credentials {
     private String username;
 
     @NotBlank
-    @Size(min = 6, message = "La password deve avere almeno 6 caratteri")
+    @Size(min = 5, message = "La password deve avere almeno 6 caratteri")
     @Column(nullable = false)
     private String password;
 

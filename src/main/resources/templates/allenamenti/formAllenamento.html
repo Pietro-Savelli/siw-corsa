@@ -16,22 +16,22 @@
 
     <div>
         <label>Titolo</label><br/>
-        <input type="text" th:field="*{allenamento.titolo}" placeholder="es. Ripetute 10km" required/>
+        <input type="text" th:field="*{titolo}" placeholder="es. Ripetute 10km" required/>
     </div><br/>
 
     <div>
         <label>Data</label><br/>
-        <input type="date" th:field="*{allenamento.data}" required/>
+        <input type="date" th:field="*{data}" required/>
     </div><br/>
 
     <div>
         <label>Distanza (km)</label><br/>
-        <input type="number" th:field="*{allenamento.distanzaInKm}" step="0.1" min="0" required/>
+        <input type="number" th:field="*{distanzaInKm}" step="0.1" min="0" required/>
     </div><br/>
 
     <div>
         <label>Tipo di allenamento</label><br/>
-        <select th:field="*{allenamento.tipoDiAllenamento}">
+        <select th:field="*{tipoDiAllenamento}">
             <option value="">-- Seleziona --</option>
             <option th:each="tipo : ${tipi}"
                     th:value="${tipo}"

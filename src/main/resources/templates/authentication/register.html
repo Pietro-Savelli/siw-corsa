@@ -18,21 +18,21 @@
         <div>
             <label>Nome</label><br/>
             <input type="text" th:field="${user.nome}" required/>
-            <span th:if="${#fields.hasErrors('utente.nome')}"
+            <span th:if="${#fields.hasErrors('user.nome')}"
                   th:errors="${user.nome}" style="color:red"></span>
         </div><br/>
 
         <div>
             <label>Cognome</label><br/>
             <input type="text" th:field="${user.cognome}" required/>
-            <span th:if="${#fields.hasErrors('utente.cognome')}"
+            <span th:if="${#fields.hasErrors('user.cognome')}"
                   th:errors="${user.cognome}" style="color:red"></span>
         </div><br/>
 
         <div>
             <label>Email</label><br/>
             <input type="email" th:field="${user.email}" required/>
-            <span th:if="${#fields.hasErrors('utente.email')}"
+            <span th:if="${#fields.hasErrors('user.email')}"
                   th:errors="${user.email}" style="color:red"></span>
         </div>
     </fieldset><br/>
