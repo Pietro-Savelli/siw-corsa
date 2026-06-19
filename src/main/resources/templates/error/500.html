@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Errore 500 - Problema Tecnico | SIW Corsa</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div style="text-align: center; margin-top: 50px;">
+    <h1>500</h1>
+    <h2>Ops! Qualcosa è andato storto.</h2>
+    <p>Abbiamo riscontrato un problema tecnico durante l'elaborazione della tua richiesta.</p>
+
+    <div th:if="${message}" style="margin: 20px auto; padding: 15px; border: 1px solid #f5c6cb; background-color: #f8d7da; color: #721c24; max-width: 600px; border-radius: 5px;">
+        <strong>Dettaglio errore:</strong> <span th:text="${message}">Messaggio di errore</span>
+    </div>
+
+    <br/>
+    <a th:href="@{/}" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+        Torna alla pagina principale
+    </a>
+</div>
+
+</body>
+</html>

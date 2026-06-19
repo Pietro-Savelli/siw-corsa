@@ -7,10 +7,18 @@
   <nav>
     <a href="/">🏃 SIW Corsa</a>
     &nbsp;|&nbsp;
+    <a href="/bacheca/index">Bacheche</a>
+    &nbsp;|&nbsp;
+    <a href="/utenti">Trova atleti</a>
+    &nbsp;|&nbsp;
     <div th:if="${userDetails}" style="display:inline">
       <span>Ciao, <strong th:text="${utente != null ? utente.nome : userDetails.username}">Utente</strong></span>
       &nbsp;|&nbsp;
       <a href="/profilo">Il mio profilo</a>
+      &nbsp;|&nbsp;
+      <a href="/profilo/seguiti">Seguiti</a>
+      &nbsp;|&nbsp;
+      <a href="/profilo/follower">Follower</a>
       &nbsp;|&nbsp;
       <form th:action="@{/logout}" method="post" style="display:inline">
         <button type="submit">Logout</button>

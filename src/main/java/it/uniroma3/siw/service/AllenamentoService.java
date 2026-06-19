@@ -6,8 +6,11 @@ import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.repository.AllenamentoRepository;
 import it.uniroma3.siw.repository.ScarpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -98,5 +101,20 @@ public class AllenamentoService {
             scarpaRepository.save(s);
         }
         allenamentoRepository.delete(a);
+    }
+
+    //bacheca generale
+
+    public Page<Allenamento> getBachecaGenerale(int numeroPagina) {
+        // size fisso a 10, come richiesto dal vincolo di paginazione rigorosa
+        Pageable pageable = PageRequest.of(numeroPagina, 10);
+        return allenamentoRepository.findAllByOrderByDataDesc(pageable);
+    }
+
+    //Bacheca dei Seguiti e se stesso
+
+    public Page<Allenamento> getBachecaSeguiti(Long utenteId, int numeroPagina) {
+        Pageable pageable = PageRequest.of(numeroPagina, 10);
+        return allenamentoRepository.findBachecaSeguiti(utenteId, pageable);
     }
 }

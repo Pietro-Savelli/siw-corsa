@@ -11,6 +11,14 @@
 <h1>🏃 Benvenuto su SIW Corsa</h1>
 <p>Traccia i tuoi allenamenti, monitora le scarpe e commenta le uscite dei tuoi amici.</p>
 
+<!-- Bacheche: visibili sempre, anche a utente non loggato (la bacheca generale è pubblica) -->
+<div>
+    <h2>📰 Bacheche</h2>
+    <ul>
+        <li><a href="/bacheca/index">Vai alle bacheche</a></li>
+    </ul>
+</div>
+
 <!-- Utente NON loggato -->
 <div th:unless="${userDetails}">
     <h2>Inizia subito</h2>

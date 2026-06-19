@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Utente {
@@ -34,6 +36,14 @@ public class Utente {
 
     @OneToMany(mappedBy = "autore", cascade = CascadeType.ALL)
     private List<Commento> commenti;
+
+    @ManyToMany
+    @JoinTable(
+            name = "follower",
+            joinColumns = @JoinColumn(name = "utente_id"),           // io
+            inverseJoinColumns = @JoinColumn(name = "seguito_id")    // chi seguo
+    )
+    private Set<Utente> seguiti = new HashSet<>();
 
     public Utente(List<Allenamento> allenamenti, List<Scarpa> scarpe, String email, String cognome, String nome, List<Commento> commenti) {
         this.allenamenti = allenamenti;
@@ -103,6 +113,15 @@ public class Utente {
     public void setCommenti(List<Commento> commenti) {
         this.commenti = commenti;
     }
+
+    public Set<Utente> getSeguiti() {
+        return seguiti;
+    }
+
+    public void setSeguiti(Set<Utente> seguiti) {
+        this.seguiti = seguiti;
+    }
+
 
     @Override
     public boolean equals(Object o) {

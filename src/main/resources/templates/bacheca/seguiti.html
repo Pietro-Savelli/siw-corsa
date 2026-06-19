@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bacheca Seguiti - SIW Corsa</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h1>👥 Bacheca dei Seguiti</h1>
+<p><a href="/bacheca/generale">← Torna alla bacheca generale</a></p>
+
+<div th:each="a : ${pagina.content}" style="border:1px solid #ccc; margin-bottom:1em; padding:0.5em;">
+
+    <p>
+        <strong th:text="${a.atleta.nome} + ' ' + ${a.atleta.cognome}">Autore</strong>
+        — <em th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</em>
+    </p>
+
+    <h3>
+        <a th:href="@{/allenamenti/{id}/seguito(id=${a.id})}" th:text="${a.titolo}">Titolo</a>
+    </h3>
+    <p th:text="${a.tipoDiAllenamento} + ' — ' + ${a.distanzaInKm} + ' km'">Dettagli</p>
+
+    <form th:action="@{/allenamenti/{id}/commenti(id=${a.id})}" method="post">
+        <textarea name="testo" rows="2" cols="50" placeholder="Scrivi un commento..." required></textarea><br/>
+        <button type="submit">Commenta</button>
+    </form>
+
+</div>
+
+<p th:if="${pagina.empty}">Non segui ancora nessuno, oppure i tuoi seguiti non hanno allenamenti registrati.</p>
+
+<div>
+    <a th:if="${pagina.hasPrevious()}"
+       th:href="@{/bacheca/seguiti(pagina=${pagina.number - 1})}">← Precedenti 10</a>
+
+    <span th:text="'Pagina ' + (${pagina.number} + 1) + ' di ' + ${pagina.totalPages}">Pagina</span>
+
+    <a th:if="${pagina.hasNext()}"
+       th:href="@{/bacheca/seguiti(pagina=${pagina.number + 1})}">Successivi 10 →</a>
+</div>
+
+</body>
+</html>

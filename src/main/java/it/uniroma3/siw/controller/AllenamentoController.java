@@ -65,6 +65,22 @@ public class AllenamentoController {
         model.addAttribute("userDetails", HomeController.getUserDetails());
         return "allenamenti/show";
     }
+    @GetMapping("/{id}/globale")
+    public String dettaglioGlobale(@PathVariable Long id, Model model) {
+        Allenamento allenamento = allenamentoService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Allenamento non trovato: " + id));
+        model.addAttribute("allenamento", allenamento);
+        model.addAttribute("userDetails", HomeController.getUserDetails());
+        return "allenamenti/showGlobale";
+    }
+    @GetMapping("/{id}/seguito")
+    public String dettaglioSeguiti(@PathVariable Long id, Model model) {
+        Allenamento allenamento = allenamentoService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Allenamento non trovato: " + id));
+        model.addAttribute("allenamento", allenamento);
+        model.addAttribute("userDetails", HomeController.getUserDetails());
+        return "allenamenti/showSeguito";
+    }
 
     /* ── UC5: Form modifica ────────────────────────────────────────── */
 
@@ -108,6 +124,7 @@ public class AllenamentoController {
         nuovoCommento.setDataOra(LocalDateTime.now());
 
         commentoService.salva(nuovoCommento);
-        return "redirect:/allenamenti/" + id;
+       return "redirect:/allenamenti/" + id;
+       //return "redirect:/bacheca/seguiti"; oppure
     }
 }

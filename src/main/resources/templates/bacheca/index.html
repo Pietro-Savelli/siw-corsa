@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bacheche - SIW Corsa</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h1>📰 Bacheche</h1>
+<p>Scegli quale bacheca vuoi consultare.</p>
+
+<div style="display:flex; gap:2em; flex-wrap:wrap;">
+
+    <!-- Bacheca Generale: sempre disponibile, anche da non loggati -->
+    <div style="border:1px solid #ccc; padding:1em; max-width:300px;">
+        <h2>🌍 Bacheca Generale</h2>
+        <p>Gli allenamenti di tutti gli atleti della community, in ordine cronologico.</p>
+        <a href="/bacheca/generale"><button>Apri bacheca generale</button></a>
+    </div>
+
+    <!-- Bacheca Seguiti: solo se loggato -->
+    <div style="border:1px solid #ccc; padding:1em; max-width:300px;">
+        <h2>👥 Bacheca dei Seguiti</h2>
+        <p>Solo gli allenamenti delle persone che segui (e i tuoi).</p>
+
+        <a th:if="${userDetails}" href="/bacheca/seguiti"><button>Apri bacheca seguiti</button></a>
+
+        <p th:unless="${userDetails}" style="color:gray;">
+            Devi <a href="/login">accedere</a> per vedere questa bacheca.
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

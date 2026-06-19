@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trova atleti - SIW Corsa</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h1>🔍 Trova atleti da seguire</h1>
+
+<table border="1">
+    <thead>
+    <tr><th>Nome</th><th>Email</th><th>Azione</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="u : ${utenti}" th:if="${utenteCorrente == null || u.id != utenteCorrente.id}">
+        <td>
+            <a th:href="@{/utenti/{id}(id=${u.id})}"
+               th:text="${u.nome} + ' ' + ${u.cognome}">Nome</a>
+        </td>
+        <td th:text="${u.email}">email</td>
+        <td>
+            <!-- Bottone visibile solo se loggato; lo stato esatto (segui/già seguito)
+                 si vede aprendo il profilo singolo, qui mettiamo solo "Segui" rapido -->
+            <form th:if="${userDetails != null}"
+                  th:action="@{/utenti/{id}/segui(id=${u.id})}" method="post" style="display:inline">
+                <input type="hidden" name="redirectTo" value="/utenti"/>
+                <button type="submit">➕ Segui</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p th:if="${userDetails == null}" style="color:gray;">
+    <a href="/login">Accedi</a> per poter seguire altri atleti.
+</p>
+
+</body>
+</html>

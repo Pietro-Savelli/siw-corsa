@@ -43,6 +43,9 @@ public class SecurityConfiguration {
     @Bean
     protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
 
+        // DA RIFARE, MI SONO DIMENTICATO DI CAMBIARE DA TORNEI
+        //authorize.requestMatchers("/bacheca/seguiti", "/utenti/*/segui", "/utenti/*/smetti-di-seguire").authenticated();
+
         httpSecurity.authorizeHttpRequests(authorize -> {
             // PUBBLICO
             authorize.requestMatchers(HttpMethod.GET, "/**", "/index", "/css/**", "/images/**", "/favicon.ico", "/static/**").permitAll();

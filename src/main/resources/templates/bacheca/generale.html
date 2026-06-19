@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bacheca Generale - SIW Corsa</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h1>🌍 Bacheca Generale</h1>
+<p th:if="${userDetails}"><a href="/bacheca/seguiti">Vai alla bacheca dei seguiti →</a></p>
+
+<!-- Iterazione sul contenuto della pagina corrente (max 10 elementi) -->
+<div th:each="a : ${pagina.content}" style="border:1px solid #ccc; margin-bottom:1em; padding:0.5em;">
+
+    <p>
+        <strong th:text="${a.atleta.nome} + ' ' + ${a.atleta.cognome}">Autore</strong>
+        — <em th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</em>
+    </p>
+
+    <h3>
+        <a th:href="@{/allenamenti/{id}/globale(id=${a.id})}" th:text="${a.titolo}">Titolo</a>
+    </h3>
+    <p th:text="${a.tipoDiAllenamento} + ' — ' + ${a.distanzaInKm} + ' km'">Dettagli</p>
+
+
+    <div th:if="${permessiCommento != null and permessiCommento.get(a.id) == true}">
+        <form th:action="@{/allenamenti/{id}/commenti(id=${a.id})}" method="post">
+            <textarea name="testo" rows="2" cols="50" placeholder="Scrivi un commento..." required></textarea><br/>
+            <button type="submit">Commenta</button>
+        </form>
+    </div>
+    <p th:if="${userDetails != null and (permessiCommento == null or permessiCommento.get(a.id) != true)}" style="color:gray; font-size:0.9em;">
+        Segui <span th:text="${a.atleta.nome}">l'autore</span> per poter commentare.
+    </p>
+
+</div>
+
+<p th:if="${pagina.empty}">Nessun allenamento disponibile.</p>
+
+<div>
+    <a th:if="${pagina.hasPrevious()}"
+       th:href="@{/bacheca/generale(pagina=${pagina.number - 1})}">← Precedenti 10</a>
+
+    <span th:text="'Pagina ' + (${pagina.number} + 1) + ' di ' + ${pagina.totalPages}">Pagina</span>
+
+    <a th:if="${pagina.hasNext()}"
+       th:href="@{/bacheca/generale(pagina=${pagina.number + 1})}">Successivi 10 →</a>
+</div>
+
+</body>
+</html>

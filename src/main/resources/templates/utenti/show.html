@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${utenteVisitato.nome} + ' ' + ${utenteVisitato.cognome}">Profilo</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h1 th:text="${utenteVisitato.nome} + ' ' + ${utenteVisitato.cognome}">Nome Atleta</h1>
+<p th:text="${utenteVisitato.email}">email@esempio.it</p>
+
+<p>
+    <strong th:text="${numFollower}">0</strong> follower
+    &nbsp;|&nbsp;
+    <strong th:text="${numSeguiti}">0</strong> seguiti
+</p>
+
+<div th:if="${userDetails != null and !isMioProfilo}">
+
+    <form th:if="${!loSeguo}"
+          th:action="@{/utenti/{id}/segui(id=${utenteVisitato.id})}"
+          method="post">
+        <input type="hidden" name="redirectTo" th:value="@{/utenti/{id}(id=${utenteVisitato.id})}"/>
+        <button type="submit">➕ Segui</button>
+    </form>
+
+    <form th:if="${loSeguo}"
+          th:action="@{/utenti/{id}/smetti-di-seguire(id=${utenteVisitato.id})}"
+          method="post">
+        <input type="hidden" name="redirectTo" th:value="@{/utenti/{id}(id=${utenteVisitato.id})}"/>
+        <button type="submit">✖ Smetti di seguire</button>
+    </form>
+
+</div>
+
+<p th:if="${userDetails == null}" style="color:gray;">
+    <a href="/login">Accedi</a> per seguire questo atleta.
+</p>
+
+<p th:if="${isMioProfilo}">
+    <a href="/profilo">Vai al tuo profilo completo →</a>
+</p>
+
+<hr/>
+
+<!-- Sezione allenamenti -->
+<h2>🏃 I Suoi allenamenti</h2>
+
+<div th:if="${#lists.isEmpty(allenamenti)}">
+    <p>Nessun allenamento registrato.</p>
+</div>
+
+<table th:unless="${#lists.isEmpty(allenamenti)}" border="1">
+    <thead>
+    <tr>
+        <th>Data</th><th>Titolo</th><th>Tipo</th><th>Km</th><th>Scarpa</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="a : ${allenamenti}">
+        <td th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</td>
+        <td>
+            <a th:href="@{/allenamenti/{id}(id=${a.id})}"
+               th:text="${a.titolo}">Titolo</a>
+        </td>
+        <td th:text="${a.tipoDiAllenamento}">Z2</td>
+        <td th:text="${a.distanzaInKm} + ' km'">10 km</td>
+        <td th:text="${a.scarpa != null ? a.scarpa.marca + ' ' + a.scarpa.modello : '—'}">—</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
