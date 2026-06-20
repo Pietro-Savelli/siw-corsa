@@ -11,6 +11,12 @@
 <h1 th:text="${utenteVisitato.nome} + ' ' + ${utenteVisitato.cognome}">Nome Atleta</h1>
 <p th:text="${utenteVisitato.email}">email@esempio.it</p>
 
+<p th:if="${utenteVisitato.squadra != null}">
+    🛡️ Squadra: 
+    <a th:href="@{/squadre/{id}(id=${utenteVisitato.squadra.id})}" 
+       th:text="${utenteVisitato.squadra.nome}">Nome Squadra</a>
+</p>
+
 <p>
     <strong th:text="${numFollower}">0</strong> follower
     &nbsp;|&nbsp;

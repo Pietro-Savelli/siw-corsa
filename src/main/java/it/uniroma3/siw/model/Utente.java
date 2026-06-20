@@ -37,6 +37,9 @@ public class Utente {
     @OneToMany(mappedBy = "autore", cascade = CascadeType.ALL)
     private List<Commento> commenti;
 
+    @ManyToOne
+    private Squadra squadra;
+
     @ManyToMany
     @JoinTable(
             name = "follower",
@@ -122,6 +125,13 @@ public class Utente {
         this.seguiti = seguiti;
     }
 
+    public Squadra getSquadra() {
+        return squadra;
+    }
+
+    public void setSquadra(Squadra squadra) {
+        this.squadra = squadra;
+    }
 
     @Override
     public boolean equals(Object o) {
