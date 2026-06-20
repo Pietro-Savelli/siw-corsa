@@ -1,6 +1,9 @@
 package it.uniroma3.siw.repository;
 
 import it.uniroma3.siw.model.Utente;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -27,4 +30,11 @@ public interface UtenteRepository extends CrudRepository<Utente, Long> {
         ORDER BY u.nome, u.cognome
         """)
     List<Utente> findFollower(@Param("utenteId") Long utenteId);
+
+
+    @Query("""
+        SELECT u FROM Utente u WHERE u.squadra.id = :squadraId
+        ORDER BY u.nome, u.cognome
+        """)
+    Page<Utente> findBySquadraId(@Param("squadraId") Long squadraId, Pageable pageable);
 }

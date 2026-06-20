@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${squadra.nome} + ' - SIW Corsa'">Squadra - SIW Corsa</title>
+    <style>
+        /* Stile base per emulare le tue tabelle */
+        table { border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 5px; text-align: left; }
+        .nav-bar { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <span>🏃‍♂️ <a th:href="@{/}">SIW Corsa</a></span> | 
+        <a th:href="@{/bacheche}">Bacheche</a> | 
+        <a th:href="@{/utenti}">Trova atleti</a> | 
+        <span>Ciao, <b th:text="${userDetails != null ? userDetails.username : 'Utente'}">Utente</b></span> | 
+        <a th:href="@{/profilo}">Il mio profilo</a> | 
+        <a th:href="@{/seguiti}">Seguiti</a> | 
+        <a th:href="@{/follower}">Follower</a> | 
+        <form th:action="@{/logout}" method="post" style="display: inline;">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+    <hr>
+
+    <div>
+        <h1 th:text="'🛡️ ' + ${squadra.nome}">Nome della Squadra</h1>
+        
+        <p th:if="${squadra.citta != null}" 
+           th:text="'📍 Sede: ' + ${squadra.citta}" 
+           style="font-size: 1.2em; color: #555;">
+           Sede: Roma
+        </p>
+    </div>
+
+    <h2>🏃‍♂️ Atleti iscritti</h2>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nome e Cognome</th>
+                <th>Email</th>
+                <th>Azione</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="atleta : ${paginaAtleti.content}">
+                <td th:text="${atleta.nome + ' ' + atleta.cognome}">Marco Bianchi</td>
+                <td th:text="${atleta.email}">marco@email.com</td>
+                <td>
+                    <a th:href="@{/utenti/{id}(id=${atleta.id})}">Vai al profilo</a>
+                </td>
+            </tr>
+            <tr th:if="${paginaAtleti.isEmpty()}">
+                <td colspan="3">Nessun atleta iscritto a questa squadra al momento.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 15px;" th:if="${paginaAtleti.totalPages > 1}">
+        
+        <a th:if="${paginaAtleti.hasPrevious()}" 
+           th:href="@{/squadre/{id}(id=${squadra.id}, page=${paginaAtleti.number - 1})}">
+           &laquo; Pagina Precedente
+        </a>
+
+        <span style="margin: 0 10px;" 
+              th:text="' Pagina ' + (${paginaAtleti.number} + 1) + ' di ' + ${paginaAtleti.totalPages} + ' '">
+        </span>
+
+        <a th:if="${paginaAtleti.hasNext()}" 
+           th:href="@{/squadre/{id}(id=${squadra.id}, page=${paginaAtleti.number + 1})}">
+           Pagina Successiva &raquo;
+        </a>
+
+    </div>
+
+</body>
+</html>

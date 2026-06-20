@@ -11,6 +11,26 @@
 <h1 th:text="${utente.nome} + ' ' + ${utente.cognome}">Nome Atleta</h1>
 <p th:text="${utente.email}">email@esempio.it</p>
 
+<div th:if="${utente.squadra != null}">
+    <p>🛡️ Squadra: 
+        <a th:href="@{/squadre/{id}(id=${utente.squadra.id})}" 
+           th:text="${utente.squadra.nome}">Nome Squadra</a>
+    </p>
+
+    <form th:action="@{/squadre/abbandona}" method="post" onsubmit="return confirm('Sei sicuro di voler abbandonare la tua squadra?');">
+        <button type="submit" style="color: white; background-color: #d9534f; border: none; padding: 5px 10px; cursor: pointer;">
+            🚪 Abbandona squadra
+        </button>
+    </form>
+</div>
+
+<div th:if="${utente.squadra == null}">
+    <p>Non fai ancora parte di nessuna squadra.</p>
+    <form th:action="@{/squadre}" method="get">
+        <button type="submit">+ Unisciti a una squadra</button>
+    </form>
+</div>
+
 <!-- Sezione scarpe -->
 <h2>👟 Le mie scarpe</h2>
 <a href="/scarpe/nuova"><button>+ Aggiungi scarpa</button></a>

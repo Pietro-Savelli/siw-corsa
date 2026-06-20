@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Squadre - SIW Corsa</title>
+    <style>
+        /* Stile base per la barra e la tabella */
+        table { border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 5px; text-align: left; }
+        .nav-bar { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <span>🏃‍♂️ <a th:href="@{/}">SIW Corsa</a></span> | 
+        <a th:href="@{/bacheche}">Bacheche</a> | 
+        <a th:href="@{/utenti}">Trova atleti</a> | 
+        <span>Ciao, <b th:text="${userDetails != null ? userDetails.username : 'Utente'}">Utente</b></span> | 
+        <a th:href="@{/profilo}">Il mio profilo</a> | 
+        <a th:href="@{/seguiti}">Seguiti</a> | 
+        <a th:href="@{/follower}">Follower</a> | 
+        <form th:action="@{/logout}" method="post" style="display: inline;">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+    <hr>
+
+    <h1>🛡️ Squadre disponibili</h1>
+    
+    <p>Scegli la squadra a cui vuoi unirti:</p>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Città</th>
+                <th>Azione</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="squadra : ${squadre}">
+                <td>
+                    <a th:href="@{/squadre/{id}(id=${squadra.id})}" th:text="${squadra.nome}">Nome Squadra</a>
+                </td>
+                
+                <td th:text="${squadra.citta}">Roma</td>
+                
+                <td>
+                    <form th:action="@{/squadre/{id}/iscriviti(id=${squadra.id})}" method="post">
+                        <button type="submit">Iscriviti!</button>
+                    </form>
+                </td>
+            </tr>
+            
+            <tr th:if="${squadre.isEmpty()}">
+                <td colspan="3">Nessuna squadra disponibile al momento.</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
