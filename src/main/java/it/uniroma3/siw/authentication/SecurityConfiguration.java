@@ -47,22 +47,22 @@ public class SecurityConfiguration {
         //authorize.requestMatchers("/bacheca/seguiti", "/utenti/*/segui", "/utenti/*/smetti-di-seguire").authenticated();
 
         httpSecurity.authorizeHttpRequests(authorize -> {
-            // PUBBLICO
-            authorize.requestMatchers(HttpMethod.GET, "/**", "/index", "/css/**", "/images/**", "/favicon.ico", "/static/**").permitAll();
+            // 1. Pagine PUBBLICHE (chiunque può vedere la lista delle squadre o i dettagli)
+            authorize.requestMatchers(HttpMethod.GET, "/**", "/index", "/css/**", "/images/**").permitAll();
+            authorize.requestMatchers(HttpMethod.GET, "/squadre", "/squadre/**").permitAll();
             authorize.requestMatchers("/login", "/register").permitAll();
-            // Dashboard React (file statici e route)
-            authorize.requestMatchers(HttpMethod.GET, "/dashboard", "/dashboard/**").permitAll();
-            authorize.requestMatchers("/api/**").permitAll();
-            // 4.1
-            authorize.requestMatchers(HttpMethod.GET, "/tornei/**", "/squadre/**", "/giocatori/**").permitAll();
 
-            // UTENTI REGISTRATI 4.2
-            authorize.requestMatchers("/partite/*/commenti/**").authenticated();
+            // 2. AZIONI CHE RICHIEDONO LOGIN (Utenti Registrati)
+            // L'asterisco (*) indica "qualsiasi ID"
+            authorize.requestMatchers(HttpMethod.POST, "/squadre/*/iscriviti").authenticated();
+            authorize.requestMatchers(HttpMethod.POST, "/squadre/abbandona").authenticated();
 
-            // ADMIN
-            // Tutte le operazioni di gestione (Requisito 4.3)
-            authorize.requestMatchers("/admin/**").hasAnyAuthority(ADMIN_ROLE);
+            authorize.requestMatchers("/allenamenti/nuovo", "/scarpe/nuova").authenticated();
 
+            // 3. ADMIN
+            authorize.requestMatchers("/admin/**").hasAnyAuthority("ADMIN");
+
+            // 4. Tutto il resto richiede il login di default
             authorize.anyRequest().authenticated();
         });
 

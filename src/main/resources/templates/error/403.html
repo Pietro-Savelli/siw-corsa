@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Errore 403 - Accesso Negato | SIW Corsa</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div style="text-align: center; margin-top: 50px;">
+    <h1>403</h1>
+    <h2>Alt! Accesso Negato.</h2>
+    <p>Non hai i permessi necessari per visualizzare questa pagina o eseguire questa azione.</p>
+    
+    <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: #d9534f; font-style: italic;"></p>
+
+    <br/>
+    <a th:href="@{/}" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+        Torna in un'area sicura
+    </a>
+</div>
+
+</body>
+</html>
