@@ -8,8 +8,10 @@ import it.uniroma3.siw.service.AllenamentoService;
 import it.uniroma3.siw.service.CommentoService;
 import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.service.ScarpaService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ public class AllenamentoController {
     @Autowired private CredentialsService credentialsService;
     @Autowired private CommentoService commentoService;
 
+    private static final Logger logger = LoggerFactory.getLogger(AllenamentoController.class);
 
     private void popolaModel(Model model, Utente utente) {
         model.addAttribute("scarpe", scarpaService.findByAtleta(utente));
@@ -35,6 +38,7 @@ public class AllenamentoController {
 
     @GetMapping("/nuovo")
     public String formNuovo(Model model) {
+        logger.debug("Accesso al form di creazione nuovo allenamento");
         model.addAttribute("allenamento", new Allenamento());
         model.addAttribute("isNuovo", true);
         popolaModel(model, credentialsService.getUtenteCorrente());
@@ -44,9 +48,10 @@ public class AllenamentoController {
     /* ── UC1: Salva nuovo allenamento ──────────────────────────────── */
 
     @PostMapping("/nuovo")
-    public String salva(@ModelAttribute Allenamento allenamento,
-                        @RequestParam(required = false) Long scarpaId) {
-        allenamentoService.salva(allenamento, credentialsService.getUtenteCorrente(), scarpaId);
+    public String salva(@ModelAttribute Allenamento allenamento, @RequestParam(required = false) Long scarpaId) {
+        Utente utente = credentialsService.getUtenteCorrente();
+        allenamentoService.salva(allenamento, utente, scarpaId);
+        logger.info("L'utente {} {} ha registrato un nuovo allenamento: '{}'", utente.getNome(), utente.getCognome(), allenamento.getTitolo());
         return "redirect:/profilo";
     }
 
@@ -54,12 +59,13 @@ public class AllenamentoController {
 
     @GetMapping("/{id}")
     public String dettaglio(@PathVariable Long id, Model model) {
-        Allenamento allenamento = allenamentoService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Allenamento non trovato: " + id));
+        logger.debug("Accesso ai dettagli dell'allenamento ID: {}", id);
+        Allenamento allenamento = allenamentoService.findById(id).orElseThrow(() -> new IllegalArgumentException("Allenamento non trovato: " + id));
         model.addAttribute("allenamento", allenamento);
         model.addAttribute("userDetails", HomeController.getUserDetails());
         return "allenamenti/show";
     }
+    
     @GetMapping("/{id}/globale")
     public String dettaglioGlobale(@PathVariable Long id, Model model) {
         Allenamento allenamento = allenamentoService.findById(id)
@@ -68,6 +74,7 @@ public class AllenamentoController {
         model.addAttribute("userDetails", HomeController.getUserDetails());
         return "allenamenti/showGlobale";
     }
+
     @GetMapping("/{id}/seguito")
     public String dettaglioSeguiti(@PathVariable Long id, Model model) {
         Allenamento allenamento = allenamentoService.findById(id)
@@ -81,6 +88,7 @@ public class AllenamentoController {
 
     @GetMapping("/{id}/modifica")
     public String formModifica(@PathVariable Long id, Model model) {
+        logger.debug("Accesso al form di modifica per l'allenamento ID: {}", id);
         Allenamento allenamento = allenamentoService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Allenamento non trovato: " + id));
         model.addAttribute("allenamento", allenamento);
@@ -95,7 +103,9 @@ public class AllenamentoController {
     public String aggiorna(@PathVariable Long id,
                            @ModelAttribute Allenamento datiNuovi,
                            @RequestParam(required = false) Long scarpaId) {
+
         allenamentoService.aggiorna(id, datiNuovi, scarpaId);
+        logger.info("Aggiornato allenamento ID: {}", id);
         return "redirect:/allenamenti/" + id;
     }
 
@@ -104,6 +114,7 @@ public class AllenamentoController {
     @PostMapping("/{id}/elimina")
     public String elimina(@PathVariable Long id) {
         allenamentoService.elimina(id);
+        logger.info("Eliminato allenamento ID: {}", id);
         return "redirect:/profilo";
     }
 
@@ -112,6 +123,7 @@ public class AllenamentoController {
     public String salvaCommento(@PathVariable("id") Long id, @RequestParam("testo") String testo) {
         Allenamento allenamento = allenamentoService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Allenamento non trovato: " + id));
+        Utente autore = credentialsService.getUtenteCorrente();
         Commento nuovoCommento = new Commento();
         nuovoCommento.setTesto(testo);
         nuovoCommento.setAllenamento(allenamento);
@@ -119,6 +131,7 @@ public class AllenamentoController {
         nuovoCommento.setDataOra(LocalDateTime.now());
 
         commentoService.salva(nuovoCommento);
+        logger.info("L'utente {} {} ha commentato l'allenamento ID: {}", autore.getNome(), autore.getCognome(), id);
        return "redirect:/allenamenti/" + id;
        //return "redirect:/bacheca/seguiti"; oppure
     }

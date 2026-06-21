@@ -33,6 +33,7 @@ public class SquadraController {
     // ---------------------------------------------------------
     @GetMapping("/squadre")
     public String list(Model model) {
+        logger.debug("Visualizzazione lista di tutte le squadre");
         model.addAttribute("squadre", squadraService.findAll());
         model.addAttribute("utenteCorrente", credentialsService.getUtenteCorrente());
         return "squadre/list";
@@ -46,6 +47,7 @@ public class SquadraController {
                        @RequestParam(defaultValue = "0") int page, 
                        Model model) {
         
+        logger.debug("Visualizzazione dettaglio squadra ID: {}", id);
         Squadra squadra = squadraService.findById(id);
         Page<Utente> paginaAtleti = squadraService.getAtletiPaginati(id, page, 10);
 
@@ -60,6 +62,7 @@ public class SquadraController {
     // ---------------------------------------------------------
     @GetMapping("/admin/squadre/new") 
     public String createForm(Model model) {
+        logger.debug("Admin accede al modulo di creazione nuova squadra");
         model.addAttribute("squadra", new Squadra());
         return "squadre/form"; 
     }
@@ -73,12 +76,13 @@ public class SquadraController {
                        Model model) {
 
         if (bindingResult.hasErrors()) {
+            logger.warn("Errore di validazione durante il salvataggio della squadra: {}", squadra.getNome());
             return "squadre/form";
         }
 
         try {
             Squadra nuovaSquadra = squadraService.save(squadra);
-            logger.debug("Nuova squadra salvata con ID: {}", nuovaSquadra.getId());
+            logger.debug("admin ha salvato con successo la Nuova squadra con ID: {}", nuovaSquadra.getId());
             return "redirect:/squadre/" + nuovaSquadra.getId();
         } catch (Exception e) {
             logger.error("Errore nel salvataggio della squadra", e);
@@ -90,8 +94,9 @@ public class SquadraController {
     // ---------------------------------------------------------
     // EDIT FORM: Mostra il modulo di modifica per una squadra esistente
     // ---------------------------------------------------------
-    @GetMapping("/squadre/{id}/edit")
+    @GetMapping("/admin/squadre/{id}/edit") //attenzione
     public String editForm(@PathVariable Long id, Model model) {
+        logger.debug("Admin accede al form di modifica per la squadra ID: {}", id);
         Squadra squadra = squadraService.findById(id);
         model.addAttribute("squadra", squadra);
         return "squadre/form";
@@ -100,9 +105,10 @@ public class SquadraController {
     // ---------------------------------------------------------
     // DELETE: Elimina una squadra
     // ---------------------------------------------------------
-    @PostMapping("/admin/squadre/{id}/delete")
+   @PostMapping("/admin/squadre/{id}/delete")
     public String delete(@PathVariable Long id) {
         squadraService.deleteById(id);
+        logger.info("Squadra ID: {} eliminata con successo", id);
         return "redirect:/squadre";
     }
 
@@ -120,12 +126,15 @@ public class SquadraController {
         
         // 3. Controlliamo se l'utente ha già una squadra
         if (utenteCorrente.getSquadra() != null) {
+            logger.warn("Utente ID: {} ha tentato di iscriversi a un'altra squadra pur essendone già in una", utenteCorrente.getId());
             return "redirect:/squadre?errore=gia_iscritto";
         }
 
         try {
+            logger.info("L'utente {} {} si è iscritto alla squadra ID: {}", utenteCorrente.getNome(), utenteCorrente.getCognome(), id);
             squadraService.iscriviUtenteASquadra(id, utenteCorrente);
         } catch (IllegalArgumentException e) {
+            logger.error("Squadra non trovata durante l'iscrizione");
             return "redirect:/squadre?errore=squadra_non_trovata";
         }
         
@@ -146,7 +155,9 @@ public class SquadraController {
         
         // 3. Se l'utente ha effettivamente una squadra, lo facciamo uscire
         if (utenteCorrente.getSquadra() != null) {
+            Long idSquadra = utenteCorrente.getSquadra().getId();
             squadraService.rimuoviUtenteDaSquadra(utenteCorrente);
+            logger.info("L'utente {} {} ha abbandonato la squadra ID: {}", utenteCorrente.getNome(), utenteCorrente.getCognome(), idSquadra);
         }
         
         // 4. Lo riportiamo al profilo

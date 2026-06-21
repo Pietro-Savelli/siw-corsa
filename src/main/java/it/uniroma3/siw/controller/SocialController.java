@@ -6,6 +6,9 @@ import it.uniroma3.siw.service.AllenamentoService;
 import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.service.ScarpaService;
 import it.uniroma3.siw.service.UtenteService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -22,9 +25,12 @@ public class SocialController {
     @Autowired private AllenamentoService allenamentoService;
     @Autowired private ScarpaService scarpaService;
 
+    private static final Logger logger = LoggerFactory.getLogger(SocialController.class);
+
 
     @GetMapping("/utenti/{id}")
     public String visualizzaUtente(@PathVariable Long id, Model model) {
+        logger.debug("Visualizzazione profilo utente ID: {}", id);
         Utente utenteVisitato = utenteService.findById(id).orElseThrow(() -> new IllegalArgumentException("Utente non trovato: " + id));
 
         Utente utenteCorrente = credentialsService.getUtenteCorrente();
@@ -91,6 +97,7 @@ public class SocialController {
         Utente utenteCorrente = credentialsService.getUtenteCorrente();
         if (utenteCorrente != null) {
             utenteService.segui(utenteCorrente.getId(), id);
+            logger.info("L'utente {} {} ha iniziato a seguire l'utente ID: {}", utenteCorrente.getNome(), utenteCorrente.getCognome(), id);
         }
         return "redirect:" + redirectTo;
     }
@@ -101,6 +108,7 @@ public class SocialController {
         Utente utenteCorrente = credentialsService.getUtenteCorrente();
         if (utenteCorrente != null) {
             utenteService.smettiDiSeguire(utenteCorrente.getId(), id);
+            logger.info("L'utente {} {} ha smesso di seguire l'utente ID: {}", utenteCorrente.getNome(), utenteCorrente.getCognome(), id);
         }
         return "redirect:" + redirectTo;
     }
