@@ -25,11 +25,6 @@ public class AllenamentoController {
     @Autowired private CredentialsService credentialsService;
     @Autowired private CommentoService commentoService;
 
-    private Utente getUtenteCorrente() {
-        UserDetails ud = HomeController.getUserDetails();
-        Credentials creds = credentialsService.findByUsername(ud.getUsername());
-        return creds.getUtente();
-    }
 
     private void popolaModel(Model model, Utente utente) {
         model.addAttribute("scarpe", scarpaService.findByAtleta(utente));
@@ -42,7 +37,7 @@ public class AllenamentoController {
     public String formNuovo(Model model) {
         model.addAttribute("allenamento", new Allenamento());
         model.addAttribute("isNuovo", true);
-        popolaModel(model, getUtenteCorrente());
+        popolaModel(model, credentialsService.getUtenteCorrente());
         return "allenamenti/formAllenamento";
     }
 
@@ -51,7 +46,7 @@ public class AllenamentoController {
     @PostMapping("/nuovo")
     public String salva(@ModelAttribute Allenamento allenamento,
                         @RequestParam(required = false) Long scarpaId) {
-        allenamentoService.salva(allenamento, getUtenteCorrente(), scarpaId);
+        allenamentoService.salva(allenamento, credentialsService.getUtenteCorrente(), scarpaId);
         return "redirect:/profilo";
     }
 
@@ -90,7 +85,7 @@ public class AllenamentoController {
                 .orElseThrow(() -> new IllegalArgumentException("Allenamento non trovato: " + id));
         model.addAttribute("allenamento", allenamento);
         model.addAttribute("isNuovo", false);
-        popolaModel(model, getUtenteCorrente());
+        popolaModel(model, credentialsService.getUtenteCorrente());
         return "allenamenti/formAllenamento";
     }
 
@@ -120,7 +115,7 @@ public class AllenamentoController {
         Commento nuovoCommento = new Commento();
         nuovoCommento.setTesto(testo);
         nuovoCommento.setAllenamento(allenamento);
-        nuovoCommento.setAutore(getUtenteCorrente());
+        nuovoCommento.setAutore(credentialsService.getUtenteCorrente());
         nuovoCommento.setDataOra(LocalDateTime.now());
 
         commentoService.salva(nuovoCommento);

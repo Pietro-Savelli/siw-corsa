@@ -29,21 +29,13 @@ public class BachecaController {
         return "bacheca/index";
     }
 
-    // Recupera l'Utente loggato, o null se l'accesso è anonimo
-    private Utente getUtenteCorrenteOrNull() {
-        UserDetails ud = HomeController.getUserDetails();
-        if (ud == null) return null;
-        Credentials creds = credentialsService.findByUsername(ud.getUsername());
-        return creds.getUtente();
-    }
-
     // Bacheca Generale
     @GetMapping("/bacheca/generale")
     public String bachecaGenerale(@RequestParam(defaultValue = "0") int pagina, Model model) {
 
         Page<Allenamento> paginaAllenamenti = allenamentoService.getBachecaGenerale(pagina);
 
-        Utente utenteCorrente = getUtenteCorrenteOrNull();
+        Utente utenteCorrente = credentialsService.getUtenteCorrente();
         model.addAttribute("userDetails", HomeController.getUserDetails());
 
         // Map<Long, Boolean>: per ogni allenamento in pagina, true se l'utente
@@ -68,7 +60,7 @@ public class BachecaController {
     @GetMapping("/bacheca/seguiti")
     public String bachecaSeguiti(@RequestParam(defaultValue = "0") int pagina, Model model) {
 
-        Utente utenteCorrente = getUtenteCorrenteOrNull();
+        Utente utenteCorrente = credentialsService.getUtenteCorrente();
         if (utenteCorrente == null) {
             return "redirect:/login";
         }

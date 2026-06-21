@@ -22,18 +22,12 @@ public class SocialController {
     @Autowired private AllenamentoService allenamentoService;
     @Autowired private ScarpaService scarpaService;
 
-    private Utente getUtenteCorrenteOrNull() {
-        UserDetails ud = HomeController.getUserDetails();
-        if (ud == null) return null;
-        Credentials creds = credentialsService.findByUsername(ud.getUsername());
-        return (creds != null) ? creds.getUtente() : null;
-    }
 
     @GetMapping("/utenti/{id}")
     public String visualizzaUtente(@PathVariable Long id, Model model) {
         Utente utenteVisitato = utenteService.findById(id).orElseThrow(() -> new IllegalArgumentException("Utente non trovato: " + id));
 
-        Utente utenteCorrente = getUtenteCorrenteOrNull();
+        Utente utenteCorrente = credentialsService.getUtenteCorrente();
         model.addAttribute("userDetails", HomeController.getUserDetails());
         model.addAttribute("utenteVisitato", utenteVisitato);
 
@@ -53,7 +47,7 @@ public class SocialController {
     // Lista di chi seguo
     @GetMapping("/profilo/seguiti")
     public String listaSeguiti(Model model) {
-        Utente utenteCorrente = getUtenteCorrenteOrNull();
+        Utente utenteCorrente = credentialsService.getUtenteCorrente();
         if (utenteCorrente == null) {
             return "redirect:/login";
         }
@@ -68,7 +62,7 @@ public class SocialController {
     // Lista di chi mi segue
     @GetMapping("/profilo/follower")
     public String listaFollower(Model model) {
-        Utente utenteCorrente = getUtenteCorrenteOrNull();
+        Utente utenteCorrente = credentialsService.getUtenteCorrente();
         if (utenteCorrente == null) {
             return "redirect:/login";
         }
@@ -83,7 +77,7 @@ public class SocialController {
     /* ── Elenco di tutti gli utenti registrati, per trovare chi seguire ── */
     @GetMapping("/utenti")
     public String elencoUtenti(Model model) {
-        Utente utenteCorrente = getUtenteCorrenteOrNull();
+        Utente utenteCorrente = credentialsService.getUtenteCorrente();
         model.addAttribute("userDetails", HomeController.getUserDetails());
         model.addAttribute("utenti", utenteService.findAll());
         model.addAttribute("utenteCorrente", utenteCorrente);
@@ -94,7 +88,7 @@ public class SocialController {
     @PostMapping("/utenti/{id}/segui")
     public String segui(@PathVariable Long id,
                         @RequestParam(defaultValue = "/utenti") String redirectTo) {
-        Utente utenteCorrente = getUtenteCorrenteOrNull();
+        Utente utenteCorrente = credentialsService.getUtenteCorrente();
         if (utenteCorrente != null) {
             utenteService.segui(utenteCorrente.getId(), id);
         }
@@ -104,7 +98,7 @@ public class SocialController {
     @PostMapping("/utenti/{id}/smetti-di-seguire")
     public String smettiDiSeguire(@PathVariable Long id,
                                   @RequestParam(defaultValue = "/utenti") String redirectTo) {
-        Utente utenteCorrente = getUtenteCorrenteOrNull();
+        Utente utenteCorrente = credentialsService.getUtenteCorrente();
         if (utenteCorrente != null) {
             utenteService.smettiDiSeguire(utenteCorrente.getId(), id);
         }

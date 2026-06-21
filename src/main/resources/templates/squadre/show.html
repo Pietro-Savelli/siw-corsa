@@ -3,28 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${squadra.nome} + ' - SIW Corsa'">Squadra - SIW Corsa</title>
-    <style>
-        /* Stile base per emulare le tue tabelle */
-        table { border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 5px; text-align: left; }
-        .nav-bar { margin-bottom: 10px; }
-    </style>
-</head>
-<body>
-
-    <div class="nav-bar">
-        <span>🏃‍♂️ <a th:href="@{/}">SIW Corsa</a></span> | 
-        <a th:href="@{/bacheche}">Bacheche</a> | 
-        <a th:href="@{/utenti}">Trova atleti</a> | 
-        <span>Ciao, <b th:text="${userDetails != null ? userDetails.username : 'Utente'}">Utente</b></span> | 
-        <a th:href="@{/profilo}">Il mio profilo</a> | 
-        <a th:href="@{/seguiti}">Seguiti</a> | 
-        <a th:href="@{/follower}">Follower</a> | 
-        <form th:action="@{/logout}" method="post" style="display: inline;">
-            <button type="submit">Logout</button>
-        </form>
-    </div>
-    <hr>
+    
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <div>
         <h1 th:text="'🛡️ ' + ${squadra.nome}">Nome della Squadra</h1>
@@ -54,6 +34,17 @@
                     <a th:href="@{/utenti/{id}(id=${atleta.id})}">Vai al profilo</a>
                 </td>
             </tr>
+
+            <td th:if="${utenteCorrente != null and utenteCorrente.squadra == null}">
+                <form th:action="@{/squadre/{id}/iscriviti(id=${squadra.id})}" method="post">
+                    <button type="submit">Iscriviti!</button>
+                </form>
+            </td>
+
+            <td th:if="${utenteCorrente != null and utenteCorrente.squadra != null and utenteCorrente.squadra.id == squadra.id}">
+                <span style="color: green; font-weight: bold;">La tua squadra 🛡️</span>
+            </td>
+
             <tr th:if="${paginaAtleti.isEmpty()}">
                 <td colspan="3">Nessun atleta iscritto a questa squadra al momento.</td>
             </tr>

@@ -15,26 +15,36 @@
 <div>
     <h2>📰 Bacheche</h2>
     <ul>
-        <li><a href="/bacheca/index">Vai alle bacheche</a></li>
+        <li><a th:href="@{/bacheca/index}">Vai alle bacheche</a></li>
     </ul>
 </div>
 
 <!-- Utente NON loggato -->
 <div th:unless="${userDetails}">
     <h2>Inizia subito</h2>
-    <a href="/register"><button>Registrati</button></a>
+    <a th:href="@{/register}"><button>Registrati</button></a>
     &nbsp;
-    <a href="/login"><button>Accedi</button></a>
+    <a th:href="@{/login}"><button>Accedi</button></a>
 </div>
 
 <!-- Utente loggato -->
 <div th:if="${userDetails}">
     <h2 th:text="'Ciao ' + ${utente.nome} + ', cosa vuoi fare oggi?'">Ciao!</h2>
     <ul>
-        <li><a href="/profilo">📋 Il mio profilo e i miei allenamenti</a></li>
-        <li><a href="/allenamenti/nuovo">➕ Registra un nuovo allenamento</a></li>
-        <li><a href="/scarpe/nuova">👟 Aggiungi una scarpa</a></li>
+        <li><a th:href="@{/profilo}">📋 Il mio profilo e i miei allenamenti</a></li>
+        <li><a th:href="@{/allenamenti/nuovo}">➕ Registra un nuovo allenamento</a></li>
+        <li><a th:href="@{/scarpe/nuova}">👟 Aggiungi una scarpa</a></li>
     </ul>
+</div>
+
+<div th:if="${isAdmin}">
+    <h2>Azioni Admin</h2>
+    <ul>
+        <li><a th:href="@{/admin/squadre/new}">Aggiungi nuova Squadra</a></li>
+
+        <li><a th:href="@{/squadre}">Guarda le Squadre</a></li>
+    </ul>
+
 </div>
 
 </body>

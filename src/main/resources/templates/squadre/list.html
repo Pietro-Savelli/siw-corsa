@@ -3,43 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Squadre - SIW Corsa</title>
-    <style>
-        /* Stile base per la barra e la tabella */
-        table { border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 5px; text-align: left; }
-        .nav-bar { margin-bottom: 10px; }
-    </style>
 </head>
 <body>
 
-    <div class="nav-bar">
-        <span>🏃‍♂️ <a th:href="@{/}">SIW Corsa</a></span> | 
-        <a th:href="@{/bacheche}">Bacheche</a> | 
-        <a th:href="@{/utenti}">Trova atleti</a> | 
-        <span>Ciao, <b th:text="${userDetails != null ? userDetails.username : 'Utente'}">Utente</b></span> | 
-        <a th:href="@{/profilo}">Il mio profilo</a> | 
-        <a th:href="@{/seguiti}">Seguiti</a> | 
-        <a th:href="@{/follower}">Follower</a> | 
-        <form th:action="@{/logout}" method="post" style="display: inline;">
-            <button type="submit">Logout</button>
-        </form>
-    </div>
-    <hr>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <h1>🛡️ Squadre disponibili</h1>
     
     <p>Scegli la squadra a cui vuoi unirti:</p>
 
-    <table border="1">
+    <table border="1" cellpadding="10" style="border-collapse: collapse;">
         <thead>
             <tr>
                 <th>Nome</th>
                 <th>Città</th>
-                <th>Azione</th>
+                <th>Stato / Azione</th>
+                <th th:if="${isAdmin}" style="color: #d9534f;">Azioni Admin</th>
             </tr>
         </thead>
         <tbody>
+            
             <tr th:each="squadra : ${squadre}">
+                
                 <td>
                     <a th:href="@{/squadre/{id}(id=${squadra.id})}" th:text="${squadra.nome}">Nome Squadra</a>
                 </td>
@@ -47,15 +32,39 @@
                 <td th:text="${squadra.citta}">Roma</td>
                 
                 <td>
-                    <form th:action="@{/squadre/{id}/iscriviti(id=${squadra.id})}" method="post">
-                        <button type="submit">Iscriviti!</button>
-                    </form>
+                    <div th:if="${utenteCorrente != null and utenteCorrente.squadra == null}">
+                        <form th:action="@{/squadre/{id}/iscriviti(id=${squadra.id})}" method="post" style="margin: 0;">
+                            <button type="submit">Iscriviti!</button>
+                        </form>
+                    </div>
+
+                    <div th:if="${utenteCorrente != null and utenteCorrente.squadra != null and utenteCorrente.squadra.id == squadra.id}">
+                        <span style="color: green; font-weight: bold;">La tua squadra 🛡️</span>
+                    </div>
                 </td>
+
+                <td th:if="${isAdmin}" style="display: flex; gap: 5px;">
+                    
+                    <a th:href="@{/squadre/{id}/edit(id=${squadra.id})}" 
+                       style="background-color: #f0ad4e; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px; font-size: 0.9em;">
+                        ✏️ Modifica
+                    </a>
+
+                    <form th:action="@{/admin/squadre/{id}/delete(id=${squadra.id})}" method="post" style="margin: 0;"
+                          onsubmit="return confirm('Sei DAVVERO sicuro di voler eliminare questa squadra?');">
+                        <button type="submit" style="background-color: #d9534f; color: white; padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; font-size: 0.9em;">
+                            🗑️ Elimina
+                        </button>
+                    </form>
+
+                </td>
+
             </tr>
             
-            <tr th:if="${squadre.isEmpty()}">
-                <td colspan="3">Nessuna squadra disponibile al momento.</td>
+            <tr th:if="${#lists.isEmpty(squadre)}">
+                <td colspan="4" style="text-align: center; font-style: italic;">Nessuna squadra disponibile al momento.</td>
             </tr>
+
         </tbody>
     </table>
 

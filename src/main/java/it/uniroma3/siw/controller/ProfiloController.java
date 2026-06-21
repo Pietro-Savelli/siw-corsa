@@ -19,11 +19,6 @@ public class ProfiloController {
     @Autowired private ScarpaService scarpaService;
     @Autowired private CredentialsService credentialsService;
 
-    private Utente getUtenteCorrente() {
-        UserDetails ud = HomeController.getUserDetails();
-        Credentials creds = credentialsService.findByUsername(ud.getUsername());
-        return creds.getUtente();
-    }
 
     /* ── UC3: Profilo ──────────────────────────────────────────────── */
 
@@ -53,7 +48,7 @@ public class ProfiloController {
 
     @PostMapping("/scarpe/nuova")
     public String salvaScarpa(@ModelAttribute Scarpa scarpa) {
-        scarpaService.salva(scarpa, getUtenteCorrente());
+        scarpaService.salva(scarpa, credentialsService.getUtenteCorrente());
         return "redirect:/profilo";
     }
 }
