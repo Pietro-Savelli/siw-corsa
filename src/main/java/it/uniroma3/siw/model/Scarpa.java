@@ -1,6 +1,7 @@
 package it.uniroma3.siw.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Objects;
 
@@ -12,6 +13,7 @@ public class Scarpa {
     private Long id;
 
     private String marca;
+    @NotBlank(message = "il modello della scarpa deve essere inserito")
     private String modello;
     private float kmTotali; // Si aggiornerà man mano che si collega con allenamenti
     private float kmMassimi; // Da confrontare cone kmTotali

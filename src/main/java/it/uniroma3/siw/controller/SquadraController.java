@@ -114,17 +114,14 @@ public class SquadraController {
 
 
     @PostMapping("/squadre/{id}/iscriviti")
-    public String iscrivitiASquadra(@PathVariable Long id) { // Niente più Principal qui!
+    public String iscrivitiASquadra(@PathVariable Long id) {
         
-        // 1. Usiamo il super-metodo del Service per avere subito l'utente
         Utente utenteCorrente = credentialsService.getUtenteCorrente();
         
-        // 2. Se è null, vuol dire che non è loggato
         if (utenteCorrente == null) {
             return "redirect:/login";
         }
         
-        // 3. Controlliamo se l'utente ha già una squadra
         if (utenteCorrente.getSquadra() != null) {
             logger.warn("Utente ID: {} ha tentato di iscriversi a un'altra squadra pur essendone già in una", utenteCorrente.getId());
             return "redirect:/squadre?errore=gia_iscritto";

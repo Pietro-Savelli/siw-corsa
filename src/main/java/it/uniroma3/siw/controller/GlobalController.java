@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @ControllerAdvice
 public class GlobalController {
 
-    // NOME ATTRIBUTO CORRETTO PER IL TUO HTML: userDetails
     @ModelAttribute("userDetails")
     public UserDetails getUserDetails() {
         UserDetails user = null;
@@ -29,7 +28,7 @@ public class GlobalController {
             return false;
         }
         for (GrantedAuthority authority : authentication.getAuthorities()) {
-            // Controlla il ruolo. Dipende da come lo salvi nel DB (di solito "ADMIN" o "ROLE_ADMIN")
+            // Controlla il ruolo
             if (authority.getAuthority().equals("ADMIN") || authority.getAuthority().equals("ROLE_ADMIN")) {
                 return true;
             }
