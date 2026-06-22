@@ -1,6 +1,10 @@
 package it.uniroma3.siw.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -14,9 +18,12 @@ public class Allenamento {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "il titolo non può essere vuoto")
     private String titolo; // es. "Ripetute sui 10km" o "Lungo z2"
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
+    @NotNull(message = "devi inserire la distanza")
+    @Min(value = 0, message = "la distanza non può essere negativa")
     private float distanzaInKm;
     private String tipoDiAllenamento;
 

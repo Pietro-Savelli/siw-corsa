@@ -8,12 +8,14 @@ import it.uniroma3.siw.service.AllenamentoService;
 import it.uniroma3.siw.service.CommentoService;
 import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.service.ScarpaService;
+import jakarta.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -48,12 +50,24 @@ public class AllenamentoController {
     /* ── UC1: Salva nuovo allenamento ──────────────────────────────── */
 
     @PostMapping("/nuovo")
-    public String salva(@ModelAttribute Allenamento allenamento, @RequestParam(required = false) Long scarpaId) {
+    public String salva(@Valid @ModelAttribute("allenamento") Allenamento allenamento,
+                        BindingResult bindingResult,
+                        @RequestParam(required = false) Long scarpaId,
+                        Model model) { 
+        
+        if (bindingResult.hasErrors()) {
+            logger.warn("Errori di validazione nel salvataggio dell'allenamento");
+            model.addAttribute("isNuovo", true);
+            popolaModel(model, credentialsService.getUtenteCorrente()); // Ripopola i menu a tendina
+            return "allenamenti/formAllenamento"; // Torna al form mostrando gli errori
+        }
+
         Utente utente = credentialsService.getUtenteCorrente();
         allenamentoService.salva(allenamento, utente, scarpaId);
         logger.info("L'utente {} {} ha registrato un nuovo allenamento: '{}'", utente.getNome(), utente.getCognome(), allenamento.getTitolo());
         return "redirect:/profilo";
     }
+
 
     /* ── UC4: Dettaglio allenamento ────────────────────────────────── */
 
@@ -101,13 +115,23 @@ public class AllenamentoController {
 
     @PostMapping("/{id}/modifica")
     public String aggiorna(@PathVariable Long id,
-                           @ModelAttribute Allenamento datiNuovi,
-                           @RequestParam(required = false) Long scarpaId) {
+                           @Valid @ModelAttribute("allenamento") Allenamento datiNuovi,
+                           BindingResult bindingResult,
+                           @RequestParam(required = false) Long scarpaId,
+                           Model model) {
+        
+    
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isNuovo", false);
+            popolaModel(model, credentialsService.getUtenteCorrente());
+            return "allenamenti/formAllenamento";
+        }
 
         allenamentoService.aggiorna(id, datiNuovi, scarpaId);
         logger.info("Aggiornato allenamento ID: {}", id);
         return "redirect:/allenamenti/" + id;
     }
+
 
     /* ── UC6: Elimina ──────────────────────────────────────────────── */
 
