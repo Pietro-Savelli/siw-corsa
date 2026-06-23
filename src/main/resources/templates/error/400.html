@@ -1,23 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Errore 400 - Richiesta non valida | SIW Corsa</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Errore 400 — SIW Corsa')}"></head>
 <body>
-
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div style="text-align: center; margin-top: 50px;">
-    <h1>400</h1>
-    <h2>Richiesta non valida.</h2>
-    <p>Il server non è riuscito a comprendere la tua richiesta. Potresti aver inserito un dato non valido o saltato un parametro obbligatorio.</p>
-    
-    <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: #d9534f; font-style: italic;"></p>
+<main class="main-container">
+    <div class="error-page">
+        <span class="error-code">400</span>
+        <h2 class="error-title">Richiesta non valida.</h2>
+        <p class="error-desc">Il server non è riuscito a comprendere la tua richiesta. Potresti aver inserito un dato non valido o saltato un parametro obbligatorio.</p>
 
-    <br/>
-    
-</div>
+        <p th:if="${errorMessage}" class="error-message-box" th:text="${errorMessage}"></p>
+    </div>
+</main>
 
 </body>
 </html>

@@ -1,48 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Bacheca Seguiti - SIW Corsa</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Bacheca Seguiti — SIW Corsa')}"></head>
 <body>
-
 <div th:replace="~{fragments/header :: header}"></div>
 
-<h1>👥 Bacheca dei Seguiti</h1>
-<p><a href="/bacheca/generale">← Torna alla bacheca generale</a></p>
+<main class="main-container">
+    <section class="section">
+        <div class="section-header">
+            <h1 class="page-title"><i class="fa-solid fa-user-group"></i> Bacheca dei Seguiti</h1>
+        </div>
+        <p class="section-desc"><a href="/bacheca/generale" class="text-accent">← Torna alla bacheca generale</a></p>
 
-<div th:each="a : ${pagina.content}" style="border:1px solid #ccc; margin-bottom:1em; padding:0.5em;">
+        <div class="card-grid">
+            <div th:each="a : ${pagina.content}" class="card-item">
+                <div class="card-item__header">
+                    <a th:href="@{/utenti/{id}(id=${a.atleta.id})}">
+                        <strong th:text="${a.atleta.nome} + ' ' + ${a.atleta.cognome}">Autore</strong>
+                    </a>
+                    <span class="text-muted" th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</span>
+                </div>
 
-    <p>
-        <a th:href="@{/utenti/{id}(id=${a.atleta.id})}">
-            <strong th:text="${a.atleta.nome} + ' ' + ${a.atleta.cognome}">Autore</strong>
-        </a>
-        — <em th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</em>
-    </p>
+                <h3 class="card-item__title">
+                    <a th:href="@{/allenamenti/{id}/seguito(id=${a.id})}" th:text="${a.titolo}">Titolo</a>
+                </h3>
+                <p class="card-item__meta" th:text="${a.tipoDiAllenamento} + ' — ' + ${a.distanzaInKm} + ' km'">Dettagli</p>
 
-    <h3>
-        <a th:href="@{/allenamenti/{id}/seguito(id=${a.id})}" th:text="${a.titolo}">Titolo</a>
-    </h3>
-    <p th:text="${a.tipoDiAllenamento} + ' — ' + ${a.distanzaInKm} + ' km'">Dettagli</p>
+                <div class="card-item__actions">
+                    <form th:action="@{/allenamenti/{id}/commenti(id=${a.id})}" method="post">
+                        <div class="form-group">
+                            <textarea name="testo" class="form-textarea" rows="2" placeholder="Scrivi un commento..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-small">Commenta</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-    <form th:action="@{/allenamenti/{id}/commenti(id=${a.id})}" method="post">
-        <textarea name="testo" rows="2" cols="50" placeholder="Scrivi un commento..." required></textarea><br/>
-        <button type="submit">Commenta</button>
-    </form>
+        <div th:if="${pagina.empty}" class="empty-state mt-4">
+            <p class="section-desc">Non segui ancora nessuno, oppure i tuoi seguiti non hanno allenamenti registrati.</p>
+        </div>
 
-</div>
-
-<p th:if="${pagina.empty}">Non segui ancora nessuno, oppure i tuoi seguiti non hanno allenamenti registrati.</p>
-
-<div>
-    <a th:if="${pagina.hasPrevious()}"
-       th:href="@{/bacheca/seguiti(pagina=${pagina.number - 1})}">← Precedenti 10</a>
-
-    <span th:text="'Pagina ' + (${pagina.number} + 1) + ' di ' + ${pagina.totalPages}">Pagina</span>
-
-    <a th:if="${pagina.hasNext()}"
-       th:href="@{/bacheca/seguiti(pagina=${pagina.number + 1})}">Successivi 10 →</a>
-</div>
+        <div class="pagination">
+            <a th:if="${pagina.hasPrevious()}" th:href="@{/bacheca/seguiti(pagina=${pagina.number - 1})}">← Precedenti 10</a>
+            <span class="text-muted" th:text="'Pagina ' + (${pagina.number} + 1) + ' di ' + ${pagina.totalPages}">Pagina</span>
+            <a th:if="${pagina.hasNext()}" th:href="@{/bacheca/seguiti(pagina=${pagina.number + 1})}">Successivi 10 →</a>
+        </div>
+    </section>
+</main>
 
 </body>
 </html>

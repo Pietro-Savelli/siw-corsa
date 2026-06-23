@@ -31,7 +31,7 @@
                     Squadra:
                     <a th:href="@{/squadre/{id}(id=${utente.squadra.id})}" th:text="${utente.squadra.nome}" class="text-accent">Nome Squadra</a>
                 </span>
-                <form th:action="@{/squadre/abbandona}" method="post" onsubmit="return confirm('Sei sicuro di voler abbandonare la tua squadra?');" style="margin: 0;">
+                <form th:action="@{/squadre/abbandona}" method="post" style="margin: 0;">
                     <button type="submit" style="color: #ef4444; background: transparent; border: none; cursor: pointer; font-weight: var(--font-weight-bold); font-family: inherit;">
                         <i class="fa-solid fa-door-open"></i> Abbandona
                     </button>

@@ -1,44 +1,66 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${allenamento.titolo}">Dettaglio allenamento</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head(${allenamento.titolo} + ' — SIW Corsa')}"></head>
 <body>
-
 <div th:replace="~{fragments/header :: header}"></div>
 
-<a href="/bacheca/generale">← Torna alla bacheca</a>
+<main class="main-container">
+    <a href="/bacheca/generale" class="link-back"><i class="fa-solid fa-arrow-left"></i> Torna alla bacheca</a>
 
-<h1 th:text="${allenamento.titolo}">Titolo</h1>
+    <section class="section">
+        <div class="section-header">
+            <h1 class="page-title" th:text="${allenamento.titolo}">Titolo</h1>
+        </div>
 
-<table border="1">
-    <tr><th>Data</th><td th:text="${#temporals.format(allenamento.data, 'dd/MM/yyyy')}">data</td></tr>
-    <tr><th>Tipo</th><td th:text="${allenamento.tipoDiAllenamento}">Z2</td></tr>
-    <tr><th>Distanza</th><td th:text="${allenamento.distanzaInKm} + ' km'">10 km</td></tr>
-    <tr><th>Atleta</th><td th:text="${allenamento.atleta.nome} + ' ' + ${allenamento.atleta.cognome}">Nome</td></tr>
-</table>
+        <div class="table-container">
+            <table class="table">
+                <tr>
+                    <th>Data</th>
+                    <td th:text="${#temporals.format(allenamento.data, 'dd/MM/yyyy')}">data</td>
+                </tr>
+                <tr>
+                    <th>Tipo</th>
+                    <td th:text="${allenamento.tipoDiAllenamento}">Z2</td>
+                </tr>
+                <tr>
+                    <th>Distanza</th>
+                    <td th:text="${allenamento.distanzaInKm} + ' km'">10 km</td>
+                </tr>
+                <tr>
+                    <th>Atleta</th>
+                    <td th:text="${allenamento.atleta.nome} + ' ' + ${allenamento.atleta.cognome}">Nome</td>
+                </tr>
+            </table>
+        </div>
 
-<!-- Scarpa -->
-<div th:if="${allenamento.scarpa != null}">
-    <h3>👟 Scarpa utilizzata</h3>
-    <p th:text="${allenamento.scarpa.marca} + ' ' + ${allenamento.scarpa.modello}">Scarpa</p>
-</div>
+        <div th:if="${allenamento.scarpa != null}" class="info-box mt-4">
+            <h3 class="info-box__title"><i class="fa-solid fa-shoe-prints"></i> Scarpa utilizzata</h3>
+            <p class="info-box__text" th:text="${allenamento.scarpa.marca} + ' ' + ${allenamento.scarpa.modello}">Scarpa</p>
+        </div>
+    </section>
 
-<!-- Commenti -->
-<h2>💬 Commenti (<span th:text="${#lists.size(allenamento.commenti)}">0</span>)</h2>
+    <hr class="divider"/>
 
-<div th:each="c : ${allenamento.commenti}">
-    <p>
-        <strong th:text="${c.autore.nome} + ' ' + ${c.autore.cognome}">Autore</strong>
-        — <em th:text="${#temporals.format(c.dataOra, 'dd/MM/yyyy HH:mm')}">data</em>
-    </p>
-    <p th:text="${c.testo}">Testo</p>
-    <hr/>
-</div>
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fa-solid fa-comments"></i> Commenti (<span th:text="${#lists.size(allenamento.commenti)}">0</span>)</h2>
+        </div>
 
-<p th:if="${#lists.isEmpty(allenamento.commenti)}">Nessun commento ancora</p>
+        <div class="comment-list">
+            <div th:each="c : ${allenamento.commenti}" class="comment-item">
+                <div class="comment-item__header">
+                    <span class="comment-item__author" th:text="${c.autore.nome} + ' ' + ${c.autore.cognome}">Autore</span>
+                    <span class="comment-item__date" th:text="${#temporals.format(c.dataOra, 'dd/MM/yyyy HH:mm')}">data</span>
+                </div>
+                <p class="comment-item__text" th:text="${c.testo}">Testo</p>
+            </div>
+        </div>
 
+        <div th:if="${#lists.isEmpty(allenamento.commenti)}" class="empty-state mt-4">
+            <p class="section-desc">Nessun commento ancora</p>
+        </div>
+    </section>
+</main>
 
 </body>
 </html>
