@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 
 
@@ -40,6 +41,15 @@ public class GlobalExceptionHandler {
 
         return "error/403";
 
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleResourceNotFound(NoResourceFoundException e, Model model) {
+        logger.warn("Risorsa non trovata: {}", e.getResourcePath());
+
+        model.addAttribute("errorMessage", "Pagina o risorsa non trovata.");
+        return "error/404";
     }
 
 

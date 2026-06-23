@@ -48,7 +48,7 @@ public class SecurityConfiguration {
 
         httpSecurity.authorizeHttpRequests(authorize -> {
             // 1. Pagine PUBBLICHE (chiunque può vedere la lista delle squadre o i dettagli)
-            authorize.requestMatchers(HttpMethod.GET, "/**", "/index", "/css/**", "/images/**").permitAll();
+            authorize.requestMatchers(HttpMethod.GET, "/", "/index", "/css/**", "/images/**").permitAll();
             authorize.requestMatchers(HttpMethod.GET, "/squadre", "/squadre/**").permitAll();
             authorize.requestMatchers("/login", "/register").permitAll();
 

@@ -14,7 +14,9 @@
 <div th:each="a : ${pagina.content}" style="border:1px solid #ccc; margin-bottom:1em; padding:0.5em;">
 
     <p>
-        <strong th:text="${a.atleta.nome} + ' ' + ${a.atleta.cognome}">Autore</strong>
+        <a th:href="@{/utenti/{id}(id=${a.atleta.id})}">
+            <strong th:text="${a.atleta.nome} + ' ' + ${a.atleta.cognome}">Autore</strong>
+        </a>
         — <em th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</em>
     </p>
 
