@@ -1,36 +1,104 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${title}">SIW Corsa</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+
 <body>
 
-<!-- Header riutilizzabile in tutte le pagine -->
-<header th:fragment="header">
-  <nav>
-    <a href="/">SIW Corsa</a>
-    &nbsp;|&nbsp;
-    <a href="/bacheca/index">Bacheche</a>
-    &nbsp;|&nbsp;
-    <a href="/utenti">Trova atleti</a>
-    &nbsp;|&nbsp;
-    <div th:if="${userDetails}" style="display:inline">
-      <span>Ciao, <strong th:text="${userDetails.username}">Utente</strong></span>
-      &nbsp;|&nbsp;
-      <a href="/profilo">Il mio profilo</a>
-      &nbsp;|&nbsp;
-      <a href="/profilo/seguiti">Seguiti</a>
-      &nbsp;|&nbsp;
-      <a href="/profilo/follower">Follower</a>
-      &nbsp;|&nbsp;
-      <form th:action="@{/logout}" method="post" style="display:inline">
-        <button type="submit">Logout</button>
-      </form>
-    </div>
-    <div th:unless="${userDetails}" style="display:inline">
-      <a href="/login">Login</a>
-      &nbsp;|&nbsp;
-      <a href="/register">Registrati</a>
-    </div>
-  </nav>
-  <hr/>
+<header th:fragment="header" class="navbar" id="navbar">
+  <div class="nav-container">
+
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">
+        <i class="fa-solid fa-person-running"></i>
+      </div>
+      SIW Corsa
+    </a>
+
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-label="Menu">
+      <span class="hamburger"></span>
+    </button>
+
+    <nav class="nav-menu" id="nav-menu">
+
+      <div class="nav-section nav-main">
+        <a href="/bacheca/index" class="nav-link">
+          <i class="fa-solid fa-table-columns"></i> Bacheche
+        </a>
+        <a href="/utenti" class="nav-link">
+          <i class="fa-solid fa-magnifying-glass"></i> Trova atleti
+        </a>
+      </div>
+
+      <div class="nav-section" th:if="${userDetails}">
+        <span class="nav-greeting">
+          <i class="fa-solid fa-hand-wave"></i> Ciao, <strong th:text="${userDetails.username}" style="margin-left: 4px;">Utente</strong>
+        </span>
+        <a href="/profilo" class="nav-link">
+          <i class="fa-solid fa-user"></i> Il mio profilo
+        </a>
+        <a href="/profilo/seguiti" class="nav-link">
+          <i class="fa-solid fa-user-check"></i> Seguiti
+        </a>
+        <a href="/profilo/follower" class="nav-link">
+          <i class="fa-solid fa-users"></i> Follower
+        </a>
+        <form th:action="@{/logout}" method="post" style="margin: 0; display: flex;">
+          <button type="submit" class="nav-link nav-link--logout" style="background: transparent; border: none; cursor: pointer; font-family: inherit; font-size: inherit; padding-left: 8px;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+          </button>
+        </form>
+      </div>
+
+      <div class="nav-section" th:unless="${userDetails}">
+        <a href="/login" class="nav-link">
+          <i class="fa-solid fa-right-to-bracket"></i> Accedi
+        </a>
+        <a href="/register" class="nav-link">
+          <i class="fa-solid fa-user-plus"></i> Registrati
+        </a>
+      </div>
+
+    </nav>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle mobile menu
+      const navToggle = document.getElementById('nav-toggle');
+      const navMenu = document.getElementById('nav-menu');
+      if (navToggle && navMenu) {
+        navToggle.addEventListener('click', () => {
+          const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+          navToggle.setAttribute('aria-expanded', !expanded);
+          navMenu.classList.toggle('is-open');
+        });
+      }
+
+      // Navbar background on scroll
+      const navbar = document.getElementById('navbar');
+      if (navbar) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 20) {
+            navbar.classList.add('is-scrolled');
+          } else {
+            navbar.classList.remove('is-scrolled');
+          }
+        });
+      }
+    });
+  </script>
 </header>
 
 </body>

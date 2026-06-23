@@ -1,71 +1,126 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Il mio profilo</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<!-- 1. Richiamo il frammento Head per caricare CSS e Font -->
+<head th:replace="~{fragments/header :: head('Il mio profilo — SIW Corsa')}"></head>
+
 <body>
 
+<!-- 2. Richiamo la Navbar -->
 <div th:replace="~{fragments/header :: header}"></div>
 
-<h1 th:text="${utente.nome} + ' ' + ${utente.cognome}">Nome Atleta</h1>
-<p th:text="${utente.email}">email@esempio.it</p>
+<!-- 3. Contenitore principale con i padding e le dimensioni corrette -->
+<main class="main-container">
 
-<div th:if="${utente.squadra != null}">
-    <p>🛡️ Squadra: 
-        <a th:href="@{/squadre/{id}(id=${utente.squadra.id})}" 
-           th:text="${utente.squadra.nome}">Nome Squadra</a>
-    </p>
+    <!-- SEZIONE PROFILO -->
+    <section class="section">
+        <div class="section-header">
+            <h1 class="section-title" style="font-size: var(--font-size-4xl);">
+                <span th:text="${utente.nome} + ' ' + ${utente.cognome}">Nome Atleta</span>
+            </h1>
+            <p class="section-desc" th:text="${utente.email}">email@esempio.it</p>
+        </div>
 
-    <form th:action="@{/squadre/abbandona}" method="post" onsubmit="return confirm('Sei sicuro di voler abbandonare la tua squadra?');">
-        <button type="submit" style="color: white; background-color: #d9534f; border: none; padding: 5px 10px; cursor: pointer;">
-            🚪 Abbandona squadra
-        </button>
-    </form>
-</div>
+        <!-- Box Squadra -->
+        <div th:if="${utente.squadra != null}" class="bacheche-card" style="max-width: 600px; margin-top: var(--space-4);">
+            <div class="bacheche-icon" style="background: var(--color-primary-light); color: var(--color-primary);">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="bacheche-body">
+                <span class="bacheche-title">
+                    Squadra:
+                    <a th:href="@{/squadre/{id}(id=${utente.squadra.id})}" th:text="${utente.squadra.nome}" class="text-accent">Nome Squadra</a>
+                </span>
+                <form th:action="@{/squadre/abbandona}" method="post" onsubmit="return confirm('Sei sicuro di voler abbandonare la tua squadra?');" style="margin: 0;">
+                    <button type="submit" style="color: #ef4444; background: transparent; border: none; cursor: pointer; font-weight: var(--font-weight-bold); font-family: inherit;">
+                        <i class="fa-solid fa-door-open"></i> Abbandona
+                    </button>
+                </form>
+            </div>
+        </div>
 
-<div th:if="${utente.squadra == null}">
-    <p>Non fai ancora parte di nessuna squadra.</p>
-    <form th:action="@{/squadre}" method="get">
-        <button type="submit">+ Unisciti a una squadra</button>
-    </form>
-</div>
+        <div th:if="${utente.squadra == null}" class="bacheche-card" style="max-width: 600px; margin-top: var(--space-4);">
+            <div class="bacheche-icon" style="background: var(--color-border); color: var(--color-text-muted);">
+                <i class="fa-solid fa-shield"></i>
+            </div>
+            <div class="bacheche-body">
+                <span class="bacheche-title" style="color: var(--color-text-muted);">Non fai ancora parte di nessuna squadra.</span>
+                <form th:action="@{/squadre}" method="get" style="margin: 0;">
+                    <button type="submit" style="color: var(--color-accent); background: transparent; border: none; cursor: pointer; font-weight: var(--font-weight-bold); font-family: inherit;">
+                        <i class="fa-solid fa-plus"></i> Unisciti
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
 
-<!-- Sezione scarpe -->
-<h2>👟 Le mie scarpe</h2>
-<a href="/scarpe/nuova"><button>+ Aggiungi scarpa</button></a>
+    <hr style="border: none; border-top: 1px solid var(--color-border); margin: var(--space-2) 0;" />
 
-<div th:if="${#lists.isEmpty(scarpe)}">
-    <p>Nessuna scarpa registrata.</p>
-</div>
-<table th:unless="${#lists.isEmpty(scarpe)}" border="1">
-    <thead>
-    <tr>
-        <th>Marca</th><th>Modello</th><th>Km totali</th><th>Km massimi</th><th>Stato</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="s : ${scarpe}">
-        <td th:text="${s.marca}">Marca</td>
-        <td th:text="${s.modello}">Modello</td>
-        <td th:text="${s.kmTotali}">0</td>
-        <td th:text="${s.kmMassimi}">700</td>
-        <td>
-            <span th:if="${s.kmTotali >= s.kmMassimi}" style="color:red">⚠ Da sostituire!</span>
-            <span th:unless="${s.kmTotali >= s.kmMassimi}" style="color:green">✓ OK</span>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <!-- SEZIONE SCARPE -->
+    <section class="section">
+        <div class="section-header" style="flex-direction: row; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+            <h2 class="section-title">
+                <i class="fa-solid fa-shoe-prints"></i> Le mie scarpe
+            </h2>
+            <a href="/scarpe/nuova" style="background: var(--gradient-primary); color: white; padding: var(--space-2) var(--space-4); border-radius: var(--radius-full); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); box-shadow: var(--shadow-sm);">
+                <i class="fa-solid fa-plus"></i> Aggiungi scarpa
+            </a>
+        </div>
 
-<hr/>
+        <!-- Stato: Nessuna scarpa -->
+        <div th:if="${#lists.isEmpty(scarpe)}" class="action-card" style="min-height: auto; align-items: center; text-align: center; padding: var(--space-8);">
+            <p class="section-desc">Nessuna scarpa registrata.</p>
+        </div>
 
+        <!-- Tabella Scarpe -->
+        <div th:unless="${#lists.isEmpty(scarpe)}" style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); overflow-x: auto; box-shadow: var(--shadow-sm);">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead style="background: var(--color-bg); border-bottom: 1px solid var(--color-border);">
+                <tr>
+                    <th style="padding: var(--space-4); font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); color: var(--color-text-muted);">Marca</th>
+                    <th style="padding: var(--space-4); font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); color: var(--color-text-muted);">Modello</th>
+                    <th style="padding: var(--space-4); font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); color: var(--color-text-muted);">Km totali</th>
+                    <th style="padding: var(--space-4); font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); color: var(--color-text-muted);">Km massimi</th>
+                    <th style="padding: var(--space-4); font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); color: var(--color-text-muted);">Stato</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="s : ${scarpe}" style="border-bottom: 1px solid var(--color-border);">
+                    <td style="padding: var(--space-4);" th:text="${s.marca}">Marca</td>
+                    <td style="padding: var(--space-4); font-weight: var(--font-weight-medium);" th:text="${s.modello}">Modello</td>
+                    <td style="padding: var(--space-4);" th:text="${s.kmTotali}">0</td>
+                    <td style="padding: var(--space-4);" th:text="${s.kmMassimi}">700</td>
+                    <td style="padding: var(--space-4);">
+                        <span th:if="${s.kmTotali >= s.kmMassimi}" style="color: #ef4444; font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Da sostituire!
+                        </span>
+                        <span th:unless="${s.kmTotali >= s.kmMassimi}" style="color: var(--color-secondary); font-weight: var(--font-weight-bold); font-size: var(--font-size-sm);">
+                            <i class="fa-solid fa-check"></i> OK
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-<h2>I miei allenamenti</h2>
+    <hr style="border: none; border-top: 1px solid var(--color-border); margin: var(--space-2) 0;" />
 
-<div id="root"></div>
+    <!-- SEZIONE ALLENAMENTI (React) -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa-solid fa-person-running"></i> I miei allenamenti
+            </h2>
+        </div>
 
-<script type="module" src="/assets/index-DcQ14Djr.js"></script>
+        <div id="root" data-pagina="profilo"></div>
+    </section>
+
+</main>
+
+<!-- Script React -->
+<script type="module" th:src="@{/assets/index-react.js}"></script>
 
 </body>
 </html>

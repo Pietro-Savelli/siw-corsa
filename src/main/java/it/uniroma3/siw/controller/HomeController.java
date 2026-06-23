@@ -3,6 +3,9 @@ package it.uniroma3.siw.controller;
 import it.uniroma3.siw.model.Credentials;
 import it.uniroma3.siw.model.Utente;
 import it.uniroma3.siw.service.CredentialsService;
+import it.uniroma3.siw.service.HomeService;
+import it.uniroma3.siw.service.UtenteService;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +19,8 @@ public class HomeController {
 
     @Autowired
     private CredentialsService credentialsService;
+    @Autowired
+    private HomeService homeService;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -27,10 +32,13 @@ public class HomeController {
             Credentials creds = credentialsService.findByUsername(userDetails.getUsername());
             if (creds != null) {
                 model.addAttribute("utente", creds.getUtente());
+                model.addAttribute("statistiche", homeService.statistiche(creds.getUtente().getId()));
             }
         }
+
         return "index";
     }
+
 
     public static UserDetails getUserDetails() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -40,4 +48,5 @@ public class HomeController {
         }
         return null;
     }
+
 }

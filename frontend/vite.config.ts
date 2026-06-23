@@ -18,4 +18,14 @@ export default defineConfig({
       },
     },
   },
+
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/index-react.js',
+        chunkFileNames: 'assets/[name].js',
+        assetFileNames: 'assets/[name].[ext]'
+      }
+    }
+  }
 })
