@@ -1,42 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Trova atleti - SIW Corsa</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: head('Trova atleti — SIW Corsa')}"></head>
+
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<h1>🔍 Trova atleti da seguire</h1>
+<main class="main-container">
+    <section class="section">
+        <div class="section-header">
+            <h1 class="section-title">
+                <i class="fa-solid fa-magnifying-glass"></i> Trova atleti da seguire
+            </h1>
+            <p class="section-desc">Scopri nuovi runner nella community per confrontare i tuoi allenamenti.</p>
+        </div>
 
-<table border="1">
-    <thead>
-    <tr><th>Nome</th><th>Email</th><th>Azione</th></tr>
-    </thead>
-    <tbody>
-    <tr th:each="u : ${utenti}" th:if="${utenteCorrente == null || u.id != utenteCorrente.id}">
-        <td>
-            <a th:href="@{/utenti/{id}(id=${u.id})}"
-               th:text="${u.nome} + ' ' + ${u.cognome}">Nome</a>
-        </td>
-        <td th:text="${u.email}">email</td>
-        <td>
-            <!-- Bottone visibile solo se loggato; lo stato esatto (segui/già seguito)
-                 si vede aprendo il profilo singolo, qui mettiamo solo "Segui" rapido -->
-            <form th:if="${userDetails != null}"
-                  th:action="@{/utenti/{id}/segui(id=${u.id})}" method="post" style="display:inline">
-                <input type="hidden" name="redirectTo" value="/utenti"/>
-                <button type="submit">➕ Segui</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); overflow-x: auto; box-shadow: var(--shadow-sm); backdrop-filter: blur(8px);">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead style="background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--color-border);">
+                <tr>
+                    <th style="padding: var(--space-4); font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); color: var(--color-text-muted);">Nome</th>
+                    <th style="padding: var(--space-4); font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); color: var(--color-text-muted);">Email</th>
+                    <th style="padding: var(--space-4); font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); color: var(--color-text-muted);">Azione</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${utenti}" th:if="${utenteCorrente == null || u.id != utenteCorrente.id}" style="border-bottom: 1px solid var(--color-border);">
+                    <td style="padding: var(--space-4);">
+                        <a th:href="@{/utenti/{id}(id=${u.id})}" th:text="${u.nome} + ' ' + ${u.cognome}" class="text-accent" style="font-weight: var(--font-weight-semibold);">Nome</a>
+                    </td>
+                    <td style="padding: var(--space-4); color: var(--color-text-muted);" th:text="${u.email}">email</td>
+                    <td style="padding: var(--space-4);">
+                        <form th:if="${userDetails != null}" th:action="@{/utenti/{id}/segui(id=${u.id})}" method="post" style="margin: 0;">
+                            <input type="hidden" name="redirectTo" value="/utenti"/>
+                            <button type="submit" style="background: var(--color-primary-light); color: var(--color-primary); border: 1px solid rgba(249, 115, 22, 0.2); padding: var(--space-2) var(--space-4); border-radius: var(--radius-full); cursor: pointer; font-weight: var(--font-weight-bold); font-size: var(--font-size-xs); font-family: inherit;">
+                                <i class="fa-solid fa-plus"></i> Segui
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-<p th:if="${userDetails == null}" style="color:gray;">
-    <a href="/login">Accedi</a> per poter seguire altri atleti.
-</p>
+        <p th:if="${userDetails == null}" class="section-desc" style="margin-top: var(--space-4);">
+            <a href="/login" class="text-accent"><i class="fa-solid fa-right-to-bracket"></i> Accedi</a> per poter seguire altri atleti.
+        </p>
+    </section>
+</main>
 
 </body>
 </html>
