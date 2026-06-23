@@ -60,42 +60,12 @@
 
 <hr/>
 
-<!-- Sezione allenamenti -->
-<h2>🏃 I miei allenamenti</h2>
-<a href="/allenamenti/nuovo"><button>+ Nuovo allenamento</button></a>
 
-<div th:if="${#lists.isEmpty(allenamenti)}">
-    <p>Nessun allenamento registrato. <a href="/allenamenti/nuovo">Aggiungine uno!</a></p>
-</div>
+<h2>I miei allenamenti</h2>
 
-<table th:unless="${#lists.isEmpty(allenamenti)}" border="1">
-    <thead>
-    <tr>
-        <th>Data</th><th>Titolo</th><th>Tipo</th><th>Km</th><th>Scarpa</th><th>Azioni</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="a : ${allenamenti}">
-        <td th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</td>
-        <td>
-            <a th:href="@{/allenamenti/{id}(id=${a.id})}"
-               th:text="${a.titolo}">Titolo</a>
-        </td>
-        <td th:text="${a.tipoDiAllenamento}">Z2</td>
-        <td th:text="${a.distanzaInKm} + ' km'">10 km</td>
-        <td th:text="${a.scarpa != null ? a.scarpa.marca + ' ' + a.scarpa.modello : '—'}">—</td>
-        <td>
-            <a th:href="@{/allenamenti/{id}/modifica(id=${a.id})}">✏ Modifica</a>
-            &nbsp;
-            <form th:action="@{/allenamenti/{id}/elimina(id=${a.id})}"
-                  method="post" style="display:inline"
-                  onsubmit="return confirm('Eliminare questo allenamento e tutti i suoi commenti?')">
-                <button type="submit">🗑 Elimina</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div id="root"></div>
+
+<script type="module" src="/assets/index-DcQ14Djr.js"></script>
 
 </body>
 </html>

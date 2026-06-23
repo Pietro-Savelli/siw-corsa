@@ -32,11 +32,15 @@
     <h2 th:text="'Ciao ' + ${utente.nome} + ', cosa vuoi fare oggi?'">Ciao!</h2>
     <ul>
         <li><a th:href="@{/profilo}">📋 Il mio profilo e i miei allenamenti</a></li>
-        <li><a th:href="@{/allenamenti/nuovo}">➕ Registra un nuovo allenamento</a></li>
+
+        <li>
+            <div id="root" data-pagina="home" style="display:inline-block;"></div>
+            <script type="module" src="/assets/index-DcQ14Djr.js"></script>
+        </li>
+
         <li><a th:href="@{/scarpe/nuova}">👟 Aggiungi una scarpa</a></li>
     </ul>
 </div>
-
 <div th:if="${isAdmin}">
     <h2>Azioni Admin</h2>
     <ul>

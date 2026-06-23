@@ -10,6 +10,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 import static it.uniroma3.siw.model.Credentials.ADMIN_ROLE;
 
@@ -41,6 +46,23 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Vite dev server. In produzione il build di React viene copiato
+        // in resources/static e servito dalla stessa origin: questa lista
+        // serve solo per lo sviluppo locale.
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        // Necessario per inviare il cookie di sessione (JSESSIONID) cross-origin
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
+    }
+
+    @Bean
     protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
 
         // DA RIFARE, MI SONO DIMENTICATO DI CAMBIARE DA TORNEI
@@ -59,12 +81,19 @@ public class SecurityConfiguration {
 
             authorize.requestMatchers("/allenamenti/nuovo", "/scarpe/nuova").authenticated();
 
+            // 2b. API REST per il frontend React — tutte richiedono sessione autenticata
+            authorize.requestMatchers("/api/**").authenticated();
+
             // 3. ADMIN
             authorize.requestMatchers("/admin/**").hasAnyAuthority("ADMIN");
 
             // 4. Tutto il resto richiede il login di default
             authorize.anyRequest().authenticated();
         });
+
+        httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
+        httpSecurity.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"));
 
         httpSecurity.formLogin(form -> {
             form.loginPage("/login").permitAll();
