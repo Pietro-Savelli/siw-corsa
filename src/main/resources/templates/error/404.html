@@ -1,23 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Errore 404 - Pagina non trovata | SIW Corsa</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Errore 404 — SIW Corsa')}"></head>
 <body>
-
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div style="text-align: center; margin-top: 50px;">
-    <h1>404</h1>
-    <h2>Oops! Sembra che tu abbia sbagliato percorso.</h2>
-    <p>La pagina che stai cercando non esiste o è stata rimossa.</p>
+<main class="main-container">
+    <div class="error-page">
+        <span class="error-code">404</span>
+        <h2 class="error-title">Oops! Sembra che tu abbia sbagliato percorso.</h2>
+        <p class="error-desc">La pagina che stai cercando non esiste o è stata rimossa.</p>
 
-    <br/>
-    <a th:href="@{/}" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
-        Torna alla Bacheca
-    </a>
-</div>
+        <a th:href="@{/}" class="btn btn-primary">Torna alla Bacheca</a>
+    </div>
+</main>
 
 </body>
 </html>

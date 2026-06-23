@@ -1,53 +1,55 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Bacheca Generale - SIW Corsa</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Bacheca Generale — SIW Corsa')}"></head>
 <body>
-
 <div th:replace="~{fragments/header :: header}"></div>
 
-<h1>🌍 Bacheca Generale</h1>
-<p th:if="${userDetails}"><a href="/bacheca/seguiti">Vai alla bacheca dei seguiti →</a></p>
+<main class="main-container">
+    <section class="section">
+        <div class="section-header">
+            <h1 class="page-title"><i class="fa-solid fa-earth-americas"></i> Bacheca Generale</h1>
+        </div>
+        <p th:if="${userDetails}" class="section-desc"><a href="/bacheca/seguiti" class="text-accent">Vai alla bacheca dei seguiti →</a></p>
 
-<!-- Iterazione sul contenuto della pagina corrente (max 10 elementi) -->
-<div th:each="a : ${pagina.content}" style="border:1px solid #ccc; margin-bottom:1em; padding:0.5em;">
+        <div class="card-grid">
+            <div th:each="a : ${pagina.content}" class="card-item">
+                <div class="card-item__header">
+                    <a th:href="@{/utenti/{id}(id=${a.atleta.id})}">
+                        <strong th:text="${a.atleta.nome} + ' ' + ${a.atleta.cognome}">Autore</strong>
+                    </a>
+                    <span class="text-muted" th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</span>
+                </div>
 
-    <p>
-        <strong th:text="${a.atleta.nome} + ' ' + ${a.atleta.cognome}">Autore</strong>
-        — <em th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</em>
-    </p>
+                <h3 class="card-item__title">
+                    <a th:href="@{/allenamenti/{id}/globale(id=${a.id})}" th:text="${a.titolo}">Titolo</a>
+                </h3>
+                <p class="card-item__meta" th:text="${a.tipoDiAllenamento} + ' — ' + ${a.distanzaInKm} + ' km'">Dettagli</p>
 
-    <h3>
-        <a th:href="@{/allenamenti/{id}/globale(id=${a.id})}" th:text="${a.titolo}">Titolo</a>
-    </h3>
-    <p th:text="${a.tipoDiAllenamento} + ' — ' + ${a.distanzaInKm} + ' km'">Dettagli</p>
+                <div class="card-item__actions" th:if="${permessiCommento != null and permessiCommento.get(a.id) == true}">
+                    <form th:action="@{/allenamenti/{id}/commenti(id=${a.id})}" method="post">
+                        <div class="form-group">
+                            <textarea name="testo" class="form-textarea" rows="2" placeholder="Scrivi un commento..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-small">Commenta</button>
+                    </form>
+                </div>
+                <p th:if="${userDetails != null and (permessiCommento == null or permessiCommento.get(a.id) != true)}" class="text-muted">
+                    Segui <span th:text="${a.atleta.nome}">l'autore</span> per poter commentare.
+                </p>
+            </div>
+        </div>
 
+        <div th:if="${pagina.empty}" class="empty-state mt-4">
+            <p class="section-desc">Nessun allenamento disponibile.</p>
+        </div>
 
-    <div th:if="${permessiCommento != null and permessiCommento.get(a.id) == true}">
-        <form th:action="@{/allenamenti/{id}/commenti(id=${a.id})}" method="post">
-            <textarea name="testo" rows="2" cols="50" placeholder="Scrivi un commento..." required></textarea><br/>
-            <button type="submit">Commenta</button>
-        </form>
-    </div>
-    <p th:if="${userDetails != null and (permessiCommento == null or permessiCommento.get(a.id) != true)}" style="color:gray; font-size:0.9em;">
-        Segui <span th:text="${a.atleta.nome}">l'autore</span> per poter commentare.
-    </p>
-
-</div>
-
-<p th:if="${pagina.empty}">Nessun allenamento disponibile.</p>
-
-<div>
-    <a th:if="${pagina.hasPrevious()}"
-       th:href="@{/bacheca/generale(pagina=${pagina.number - 1})}">← Precedenti 10</a>
-
-    <span th:text="'Pagina ' + (${pagina.number} + 1) + ' di ' + ${pagina.totalPages}">Pagina</span>
-
-    <a th:if="${pagina.hasNext()}"
-       th:href="@{/bacheca/generale(pagina=${pagina.number + 1})}">Successivi 10 →</a>
-</div>
+        <div class="pagination">
+            <a th:if="${pagina.hasPrevious()}" th:href="@{/bacheca/generale(pagina=${pagina.number - 1})}">← Precedenti 10</a>
+            <span class="text-muted" th:text="'Pagina ' + (${pagina.number} + 1) + ' di ' + ${pagina.totalPages}">Pagina</span>
+            <a th:if="${pagina.hasNext()}" th:href="@{/bacheca/generale(pagina=${pagina.number + 1})}">Successivi 10 →</a>
+        </div>
+    </section>
+</main>
 
 </body>
 </html>

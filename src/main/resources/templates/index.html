@@ -1,51 +1,174 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>SIW Corsa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIW Corsa — Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
-
+<!-- Navigation Bar: fragment riutilizzabile su tutte le pagine -->
 <div th:replace="~{fragments/header :: header}"></div>
 
-<h1>🏃 Benvenuto su SIW Corsa</h1>
-<p>Traccia i tuoi allenamenti, monitora le scarpe e commenta le uscite dei tuoi amici.</p>
+<!-- Hero Section -->
+<header class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fa-solid fa-bolt"></i>
+            <span>La tua community di running</span>
+        </div>
+        <h1 class="hero-title">Benvenuto su <span class="text-accent">SIW Corsa</span></h1>
+        <p class="hero-subtitle">
+            Traccia i tuoi allenamenti, monitora le scarpe e commenta le uscite dei tuoi amici.
+        </p>
+        <div class="hero-stats" th:if="${userDetails}">
+            <div class="stat-item">
+                <span th:text="${statistiche.kmTotali}">0</span>
+                <span class="stat-label">km totali</span>
+            </div>
+            <div class="stat-item">
+                <span th:text="${statistiche.numeroAllenamenti}">0</span>
+                <span class="stat-label">allenamenti</span>
+            </div>
+            <div class="stat-item">
+                <span th:text="${statistiche.numeroScarpe}">0</span>
+                <span class="stat-label">scarpe</span>
+            </div>
+        </div>
+    </div>
+</header>
 
-<!-- Bacheche: visibili sempre, anche a utente non loggato (la bacheca generale è pubblica) -->
-<div>
-    <h2>📰 Bacheche</h2>
-    <ul>
-        <li><a th:href="@{/bacheca/index}">Vai alle bacheche</a></li>
-    </ul>
-</div>
+<!-- Main Content -->
+<main class="main-container">
+    <!-- Sezione Bacheche: pubblica, visibile sempre -->
+    <section class="section section--bacheche" aria-labelledby="bacheche-heading">
+        <div class="section-header">
+            <h2 id="bacheche-heading" class="section-title">
+                <i class="fa-solid fa-bullhorn"></i>
+                Bacheche
+            </h2>
+            <p class="section-desc">Scopri cosa hanno condiviso gli altri atleti.</p>
+        </div>
+        <a href="/bacheca/index" class="bacheche-card">
+            <div class="bacheche-icon">
+                <i class="fa-solid fa-comments"></i>
+            </div>
+            <div class="bacheche-body">
+                <span class="bacheche-title">Vai alle bacheche</span>
+                <span class="bacheche-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+        </a>
+    </section>
 
-<!-- Utente NON loggato -->
-<div th:unless="${userDetails}">
-    <h2>Inizia subito</h2>
-    <a th:href="@{/register}"><button>Registrati</button></a>
-    &nbsp;
-    <a th:href="@{/login}"><button>Accedi</button></a>
-</div>
+    <!-- Sezione CTA: solo per utenti loggati -->
+    <section class="section section--actions" aria-labelledby="actions-heading" th:if="${userDetails}">
+        <div class="section-header">
+            <h2 id="actions-heading" class="section-title">
+                <i class="fa-solid fa-compass"></i>
+                <span th:text="'Ciao ' + ${userDetails.username} + ', cosa vuoi fare oggi?'">Ciao Pietro, cosa vuoi fare oggi?</span>
+            </h2>
+            <p class="section-desc">Scegli un'azione rapida per continuare il tuo allenamento.</p>
+        </div>
 
-<!-- Utente loggato -->
-<div th:if="${userDetails}">
-    <h2 th:text="'Ciao ' + ${utente.nome} + ', cosa vuoi fare oggi?'">Ciao!</h2>
-    <ul>
-        <li><a th:href="@{/profilo}">📋 Il mio profilo e i miei allenamenti</a></li>
-        <li><a th:href="@{/allenamenti/nuovo}">➕ Registra un nuovo allenamento</a></li>
-        <li><a th:href="@{/scarpe/nuova}">👟 Aggiungi una scarpa</a></li>
-    </ul>
-</div>
+        <div class="actions-grid">
+            <!-- Card Profilo -->
+            <a href="/profilo" class="action-card action-card--profile">
+                <div class="action-card__icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h3 class="action-card__title">Il mio profilo e i miei allenamenti</h3>
+                <p class="action-card__desc">Rivedi i tuoi progressi, le statistiche e la cronologia delle corse.</p>
+                <span class="action-card__link">
+                        <span>Accedi</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </span>
+            </a>
 
-<div th:if="${isAdmin}">
-    <h2>Azioni Admin</h2>
-    <ul>
-        <li><a th:href="@{/admin/squadre/new}">Aggiungi nuova Squadra</a></li>
+            <!-- Card CTA Principale: montata via React (RegistraAllenamento) -->
+            <div id="root" data-pagina="home"></div>
 
-        <li><a th:href="@{/squadre}">Guarda le Squadre</a></li>
-    </ul>
+            <!-- Card Scarpe -->
+            <a href="/scarpe/nuova" class="action-card action-card--shoes">
+                <div class="action-card__icon">
+                    <i class="fa-solid fa-shoe-prints"></i>
+                </div>
+                <h3 class="action-card__title">Aggiungi una scarpa</h3>
+                <p class="action-card__desc">Inserisci un nuovo paio di scarpe per monitorarne il chilometraggio.</p>
+                <span class="action-card__link">
+                        <span>Aggiungi</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </span>
+            </a>
+        </div>
+    </section>
 
-</div>
+    <!-- Sezione invito: solo per ospiti, al posto della sezione CTA -->
+    <section class="section section--guest-cta" aria-labelledby="guest-cta-heading" th:unless="${userDetails}">
+        <div class="section-header">
+            <h2 id="guest-cta-heading" class="section-title">
+                <i class="fa-solid fa-compass"></i>
+                Inizia subito
+            </h2>
+            <p class="section-desc">Accedi o registrati per tracciare i tuoi allenamenti e le tue scarpe.</p>
+        </div>
+        <div class="actions-grid">
+            <a th:href="@{/login}" class="action-card action-card--profile">
+                <div class="action-card__icon">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                </div>
+                <h3 class="action-card__title">Accedi</h3>
+                <p class="action-card__desc">Hai già un account? Entra per continuare il tuo allenamento.</p>
+                <span class="action-card__link">
+                        <span>Accedi</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </span>
+            </a>
+            <a th:href="@{/register}" class="action-card action-card--shoes">
+                <div class="action-card__icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <h3 class="action-card__title">Registrati</h3>
+                <p class="action-card__desc">Crea il tuo account e inizia a tracciare allenamenti e scarpe.</p>
+                <span class="action-card__link">
+                        <span>Registrati</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </span>
+            </a>
+        </div>
+    </section>
+</main>
 
+<!-- Script React: caricato una sola volta, monta sul div #root solo se presente (cioè solo se loggato) -->
+<script type="module" th:src="@{/assets/index-react.js}" th:if="${userDetails}"></script>
+
+<footer class="footer">
+    <p>&copy; 2025 SIW Corsa. Allenati con passione.</p>
+</footer>
+
+<script>
+    // Toggle mobile menu
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+    });
+
+    // Navbar background on scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) {
+            navbar.classList.add('is-scrolled');
+        } else {
+            navbar.classList.remove('is-scrolled');
+        }
+    });
+</script>
 </body>
 </html>

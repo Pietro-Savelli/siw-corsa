@@ -35,4 +35,9 @@ public interface AllenamentoRepository extends JpaRepository<Allenamento, Long> 
         ORDER BY a.data DESC
         """)
     Page<Allenamento> findBachecaSeguiti(@Param("utenteId") Long utenteId, Pageable pageable);
+
+    long countByAtletaId(Long utenteId);
+
+    @Query("SELECT COALESCE(SUM(a.distanzaInKm), 0.0) FROM Allenamento a WHERE a.atleta.id = :atletaId")
+    long sumDistanzaInKmByAtletaId(@Param("atletaId") Long atletaId);
 }

@@ -1,82 +1,117 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${utenteVisitato.nome} + ' ' + ${utenteVisitato.cognome}">Profilo</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: head(${utenteVisitato.nome} + ' ' + ${utenteVisitato.cognome} + ' — SIW Corsa')}"></head>
+
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<h1 th:text="${utenteVisitato.nome} + ' ' + ${utenteVisitato.cognome}">Nome Atleta</h1>
-<p th:text="${utenteVisitato.email}">email@esempio.it</p>
+<main class="main-container">
 
-<p th:if="${utenteVisitato.squadra != null}">
-    🛡️ Squadra: 
-    <a th:href="@{/squadre/{id}(id=${utenteVisitato.squadra.id})}" 
-       th:text="${utenteVisitato.squadra.nome}">Nome Squadra</a>
-</p>
+    <section class="section">
+        <div class="section-header">
+            <h1 class="page-title">
+                <i class="fa-solid fa-user-circle"></i>
+                <span th:text="${utenteVisitato.nome} + ' ' + ${utenteVisitato.cognome}">Nome Atleta</span>
+            </h1>
+            <p class="section-desc" th:text="${utenteVisitato.email}">email@esempio.it</p>
+        </div>
 
-<p>
-    <strong th:text="${numFollower}">0</strong> follower
-    &nbsp;|&nbsp;
-    <strong th:text="${numSeguiti}">0</strong> seguiti
-</p>
+        <div class="actions-bar mt-2">
+            <div class="stat-badge">
+                <span class="stat-badge__value" th:text="${numFollower}">0</span>
+                <span class="stat-badge__label">Follower</span>
+            </div>
+            <div class="stat-badge">
+                <span class="stat-badge__value" th:text="${numSeguiti}">0</span>
+                <span class="stat-badge__label">Seguiti</span>
+            </div>
+        </div>
 
-<div th:if="${userDetails != null and !isMioProfilo}">
+        <div th:if="${utenteVisitato.squadra != null}" class="bacheche-card max-w-600 mt-4">
+            <div class="bacheche-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="bacheche-body">
+                <span class="bacheche-title">
+                    Squadra:
+                    <a th:href="@{/squadre/{id}(id=${utenteVisitato.squadra.id})}" th:text="${utenteVisitato.squadra.nome}" class="text-accent">Nome Squadra</a>
+                </span>
+            </div>
+        </div>
 
-    <form th:if="${!loSeguo}"
-          th:action="@{/utenti/{id}/segui(id=${utenteVisitato.id})}"
-          method="post">
-        <input type="hidden" name="redirectTo" th:value="@{/utenti/{id}(id=${utenteVisitato.id})}"/>
-        <button type="submit">➕ Segui</button>
-    </form>
+        <div class="actions-bar mt-4">
+            <div th:if="${userDetails != null and !isMioProfilo}">
 
-    <form th:if="${loSeguo}"
-          th:action="@{/utenti/{id}/smetti-di-seguire(id=${utenteVisitato.id})}"
-          method="post">
-        <input type="hidden" name="redirectTo" th:value="@{/utenti/{id}(id=${utenteVisitato.id})}"/>
-        <button type="submit">✖ Smetti di seguire</button>
-    </form>
+                <form th:if="${!loSeguo}" th:action="@{/utenti/{id}/segui(id=${utenteVisitato.id})}" method="post" class="inline-form">
+                    <input type="hidden" name="redirectTo" th:value="@{/utenti/{id}(id=${utenteVisitato.id})}"/>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-user-plus"></i> Segui
+                    </button>
+                </form>
 
-</div>
+                <form th:if="${loSeguo}" th:action="@{/utenti/{id}/smetti-di-seguire(id=${utenteVisitato.id})}" method="post" class="inline-form">
+                    <input type="hidden" name="redirectTo" th:value="@{/utenti/{id}(id=${utenteVisitato.id})}"/>
+                    <button type="submit" class="btn btn-outline">
+                        <i class="fa-solid fa-user-minus"></i> Smetti di seguire
+                    </button>
+                </form>
 
-<p th:if="${userDetails == null}" style="color:gray;">
-    <a href="/login">Accedi</a> per seguire questo atleta.
-</p>
+            </div>
 
-<p th:if="${isMioProfilo}">
-    <a href="/profilo">Vai al tuo profilo completo →</a>
-</p>
+            <p th:if="${userDetails == null}" class="section-desc">
+                <a href="/login" class="text-accent"><i class="fa-solid fa-right-to-bracket"></i> Accedi</a> per seguire questo atleta.
+            </p>
 
-<hr/>
+            <a th:if="${isMioProfilo}" href="/profilo" class="btn-link text-success">
+                <i class="fa-solid fa-arrow-right"></i> Vai al tuo profilo completo
+            </a>
+        </div>
+    </section>
 
-<!-- Sezione allenamenti -->
-<h2>🏃 I Suoi allenamenti</h2>
+    <hr class="divider"/>
 
-<div th:if="${#lists.isEmpty(allenamenti)}">
-    <p>Nessun allenamento registrato.</p>
-</div>
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fa-solid fa-person-running"></i> I Suoi allenamenti
+            </h2>
+        </div>
 
-<table th:unless="${#lists.isEmpty(allenamenti)}" border="1">
-    <thead>
-    <tr>
-        <th>Data</th><th>Titolo</th><th>Tipo</th><th>Km</th><th>Scarpa</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="a : ${allenamenti}">
-        <td th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</td>
-        <td>
-            <a th:href="@{/allenamenti/{id}/globale(id=${a.id})}"
-               th:text="${a.titolo}">Titolo</a>
-        </td>
-        <td th:text="${a.tipoDiAllenamento}">Z2</td>
-        <td th:text="${a.distanzaInKm} + ' km'">10 km</td>
-        <td th:text="${a.scarpa != null ? a.scarpa.marca + ' ' + a.scarpa.modello : '—'}">—</td>
-    </tr>
-    </tbody>
-</table>
+        <div th:if="${#lists.isEmpty(allenamenti)}" class="empty-state">
+            <p class="section-desc">Nessun allenamento registrato.</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(allenamenti)}" class="table-container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Titolo</th>
+                    <th>Tipo</th>
+                    <th>Km</th>
+                    <th>Scarpa</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a : ${allenamenti}">
+                    <td class="text-muted" th:text="${#temporals.format(a.data, 'dd/MM/yyyy')}">data</td>
+                    <td>
+                        <a th:href="@{/allenamenti/{id}/globale(id=${a.id})}" th:text="${a.titolo}" class="text-accent">Titolo</a>
+                    </td>
+                    <td>
+                        <span class="badge" th:text="${a.tipoDiAllenamento}">Z2</span>
+                    </td>
+                    <td class="font-bold" th:text="${a.distanzaInKm} + ' km'">10 km</td>
+                    <td class="text-muted" th:text="${a.scarpa != null ? a.scarpa.marca + ' ' + a.scarpa.modello : '—'}">—</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
 
 </body>
 </html>

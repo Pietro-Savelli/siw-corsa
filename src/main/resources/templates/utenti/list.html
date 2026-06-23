@@ -1,42 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Trova atleti - SIW Corsa</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/header :: head('Trova atleti — SIW Corsa')}"></head>
+
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<h1>🔍 Trova atleti da seguire</h1>
+<main class="main-container">
+    <section class="section">
+        <div class="section-header">
+            <h1 class="page-title">
+                <i class="fa-solid fa-magnifying-glass"></i> Trova atleti da seguire
+            </h1>
+            <p class="section-desc">Scopri nuovi runner nella community per confrontare i tuoi allenamenti.</p>
+        </div>
 
-<table border="1">
-    <thead>
-    <tr><th>Nome</th><th>Email</th><th>Azione</th></tr>
-    </thead>
-    <tbody>
-    <tr th:each="u : ${utenti}" th:if="${utenteCorrente == null || u.id != utenteCorrente.id}">
-        <td>
-            <a th:href="@{/utenti/{id}(id=${u.id})}"
-               th:text="${u.nome} + ' ' + ${u.cognome}">Nome</a>
-        </td>
-        <td th:text="${u.email}">email</td>
-        <td>
-            <!-- Bottone visibile solo se loggato; lo stato esatto (segui/già seguito)
-                 si vede aprendo il profilo singolo, qui mettiamo solo "Segui" rapido -->
-            <form th:if="${userDetails != null}"
-                  th:action="@{/utenti/{id}/segui(id=${u.id})}" method="post" style="display:inline">
-                <input type="hidden" name="redirectTo" value="/utenti"/>
-                <button type="submit">➕ Segui</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Azione</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${utenti}" th:if="${utenteCorrente == null || u.id != utenteCorrente.id}">
+                    <td>
+                        <a th:href="@{/utenti/{id}(id=${u.id})}" th:text="${u.nome} + ' ' + ${u.cognome}" class="text-accent font-semibold">Nome</a>
+                    </td>
+                    <td class="text-muted" th:text="${u.email}">email</td>
+                    <td>
+                        <form th:if="${userDetails != null}" th:action="@{/utenti/{id}/segui(id=${u.id})}" method="post" class="inline-form">
+                            <input type="hidden" name="redirectTo" value="/utenti"/>
+                            <button type="submit" class="btn btn-outline btn-small">
+                                <i class="fa-solid fa-plus"></i> Segui
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-<p th:if="${userDetails == null}" style="color:gray;">
-    <a href="/login">Accedi</a> per poter seguire altri atleti.
-</p>
+        <p th:if="${userDetails == null}" class="section-desc mt-4">
+            <a href="/login" class="text-accent"><i class="fa-solid fa-right-to-bracket"></i> Accedi</a> per poter seguire altri atleti.
+        </p>
+    </section>
+</main>
 
 </body>
 </html>

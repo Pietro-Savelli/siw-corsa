@@ -1,6 +1,7 @@
 package it.uniroma3.siw.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,9 +23,12 @@ public class Allenamento {
     private String titolo; // es. "Ripetute sui 10km" o "Lungo z2"
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
+
     @NotNull(message = "devi inserire la distanza")
-    @Min(value = 0, message = "la distanza non può essere negativa")
+    @Min(value = 1, message = "la distanza non può essere negativa")
+    @Max(value = 500,message = "la distanza deve essere minore di 500km")
     private float distanzaInKm;
+
     private String tipoDiAllenamento;
 
     @ManyToOne

@@ -1,73 +1,67 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${squadra.nome} + ' - SIW Corsa'">Squadra - SIW Corsa</title>
-    
-    <div th:replace="~{fragments/header :: header}"></div>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head(${squadra.nome} + ' — SIW Corsa')}"></head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
 
-    <div>
-        <h1 th:text="'🛡️ ' + ${squadra.nome}">Nome della Squadra</h1>
-        
-        <p th:if="${squadra.citta != null}" 
-           th:text="'📍 Sede: ' + ${squadra.citta}" 
-           style="font-size: 1.2em; color: #555;">
-           Sede: Roma
-        </p>
-    </div>
+<main class="main-container">
+    <section class="section">
+        <div class="section-header">
+            <h1 class="page-title" th:text="'🛡️ ' + ${squadra.nome}">Nome della Squadra</h1>
+            <p class="section-desc" th:if="${squadra.citta != null}" th:text="'📍 Sede: ' + ${squadra.citta}">Sede: Roma</p>
+        </div>
 
-    <h2>🏃‍♂️ Atleti iscritti</h2>
-
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Nome e Cognome</th>
-                <th>Email</th>
-                <th>Azione</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="atleta : ${paginaAtleti.content}">
-                <td th:text="${atleta.nome + ' ' + atleta.cognome}">Marco Bianchi</td>
-                <td th:text="${atleta.email}">marco@email.com</td>
-                <td>
-                    <a th:href="@{/utenti/{id}(id=${atleta.id})}">Vai al profilo</a>
-                </td>
-            </tr>
-
-            <td th:if="${utenteCorrente != null and utenteCorrente.squadra == null}">
-                <form th:action="@{/squadre/{id}/iscriviti(id=${squadra.id})}" method="post">
-                    <button type="submit">Iscriviti!</button>
+        <div class="actions-bar mt-4">
+            <div th:if="${utenteCorrente != null and utenteCorrente.squadra == null}">
+                <form th:action="@{/squadre/{id}/iscriviti(id=${squadra.id})}" method="post" class="inline-form">
+                    <button type="submit" class="btn btn-primary">Iscriviti!</button>
                 </form>
-            </td>
+            </div>
 
-            <td th:if="${utenteCorrente != null and utenteCorrente.squadra != null and utenteCorrente.squadra.id == squadra.id}">
-                <span style="color: green; font-weight: bold;">La tua squadra 🛡️</span>
-            </td>
+            <div th:if="${utenteCorrente != null and utenteCorrente.squadra != null and utenteCorrente.squadra.id == squadra.id}">
+                <span class="badge badge-success">La tua squadra <i class="fa-solid fa-shield-halved"></i></span>
+            </div>
+        </div>
+    </section>
 
-            <tr th:if="${paginaAtleti.isEmpty()}">
-                <td colspan="3">Nessun atleta iscritto a questa squadra al momento.</td>
-            </tr>
-        </tbody>
-    </table>
+    <hr class="divider"/>
 
-    <div style="margin-top: 15px;" th:if="${paginaAtleti.totalPages > 1}">
-        
-        <a th:if="${paginaAtleti.hasPrevious()}" 
-           th:href="@{/squadre/{id}(id=${squadra.id}, page=${paginaAtleti.number - 1})}">
-           &laquo; Pagina Precedente
-        </a>
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fa-solid fa-person-running"></i> Atleti iscritti</h2>
+        </div>
 
-        <span style="margin: 0 10px;" 
-              th:text="' Pagina ' + (${paginaAtleti.number} + 1) + ' di ' + ${paginaAtleti.totalPages} + ' '">
-        </span>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nome e Cognome</th>
+                        <th>Email</th>
+                        <th>Azione</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="atleta : ${paginaAtleti.content}">
+                        <td th:text="${atleta.nome + ' ' + atleta.cognome}">Marco Bianchi</td>
+                        <td th:text="${atleta.email}">marco@email.com</td>
+                        <td>
+                            <a th:href="@{/utenti/{id}(id=${atleta.id})}">Vai al profilo</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${paginaAtleti.isEmpty()}">
+                        <td colspan="3" class="text-muted text-center font-italic">Nessun atleta iscritto a questa squadra al momento.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <a th:if="${paginaAtleti.hasNext()}" 
-           th:href="@{/squadre/{id}(id=${squadra.id}, page=${paginaAtleti.number + 1})}">
-           Pagina Successiva &raquo;
-        </a>
-
-    </div>
+        <div class="pagination" th:if="${paginaAtleti.totalPages > 1}">
+            <a th:if="${paginaAtleti.hasPrevious()}" th:href="@{/squadre/{id}(id=${squadra.id}, page=${paginaAtleti.number - 1})}">« Pagina Precedente</a>
+            <span class="text-muted" th:text="' Pagina ' + (${paginaAtleti.number} + 1) + ' di ' + ${paginaAtleti.totalPages} + ' '"></span>
+            <a th:if="${paginaAtleti.hasNext()}" th:href="@{/squadre/{id}(id=${squadra.id}, page=${paginaAtleti.number + 1})}">Pagina Successiva »</a>
+        </div>
+    </section>
+</main>
 
 </body>
 </html>

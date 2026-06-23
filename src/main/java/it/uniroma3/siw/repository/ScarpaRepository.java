@@ -10,4 +10,6 @@ public interface ScarpaRepository extends CrudRepository<Scarpa, Long> {
 
     // Le scarpe di un atleta specifico (per il form "Crea Allenamento")
     List<Scarpa> findByAtleta(Utente atleta);
+
+    long countByAtletaId(Long utenteId);
 }

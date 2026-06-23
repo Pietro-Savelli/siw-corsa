@@ -1,64 +1,62 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Registrazione - SIW Corsa</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Registrati — SIW Corsa')}"></head>
 <body>
-
 <div th:replace="~{fragments/header :: header}"></div>
 
-<h1>Registrazione nuovo atleta</h1>
-
-<form th:action="@{/register}" method="post">
-
-    <fieldset>
-        <legend>Dati personali</legend>
-
-        <div>
-            <label>Nome</label><br/>
-            <input type="text" th:field="${user.nome}" required/>
-            <span th:if="${#fields.hasErrors('user.nome')}"
-                  th:errors="${user.nome}" style="color:red"></span>
-        </div><br/>
-
-        <div>
-            <label>Cognome</label><br/>
-            <input type="text" th:field="${user.cognome}" required/>
-            <span th:if="${#fields.hasErrors('user.cognome')}"
-                  th:errors="${user.cognome}" style="color:red"></span>
-        </div><br/>
-
-        <div>
-            <label>Email</label><br/>
-            <input type="email" th:field="${user.email}" required/>
-            <span th:if="${#fields.hasErrors('user.email')}"
-                  th:errors="${user.email}" style="color:red"></span>
+<main class="main-container">
+    <section class="section">
+        <div class="section-header">
+            <h1 class="page-title">Registrazione nuovo atleta</h1>
         </div>
-    </fieldset><br/>
 
-    <fieldset>
-        <legend>Credenziali di accesso</legend>
+        <form th:action="@{/register}" method="post" class="max-w-600">
+            <fieldset class="card">
+                <legend class="section-title section-title--small">Dati personali</legend>
 
-        <div>
-            <label>Username</label><br/>
-            <input type="text" th:field="${credentials.username}" required/>
-            <span th:if="${#fields.hasErrors('credentials.username')}"
-                  th:errors="${credentials.username}" style="color:red"></span>
-        </div><br/>
+                <div class="form-group">
+                    <label class="form-label">Nome</label>
+                    <input type="text" class="form-input" th:field="${user.nome}" required/>
+                    <span class="form-error" th:if="${#fields.hasErrors('user.nome')}" th:errors="${user.nome}"></span>
+                </div>
 
-        <div>
-            <label>Password (min. 6 caratteri)</label><br/>
-            <input type="password" th:field="${credentials.password}" required/>
-            <span th:if="${#fields.hasErrors('credentials.password')}"
-                  th:errors="${credentials.password}" style="color:red"></span>
-        </div>
-    </fieldset><br/>
+                <div class="form-group">
+                    <label class="form-label">Cognome</label>
+                    <input type="text" class="form-input" th:field="${user.cognome}" required/>
+                    <span class="form-error" th:if="${#fields.hasErrors('user.cognome')}" th:errors="${user.cognome}"></span>
+                </div>
 
-    <button type="submit">Registrati</button>
-</form>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" th:field="${user.email}" required/>
+                    <span class="form-error" th:if="${#fields.hasErrors('user.email')}" th:errors="${user.email}"></span>
+                </div>
+            </fieldset>
 
-<p>Hai già un account? <a href="/login">Accedi</a></p>
+            <fieldset class="card mt-4">
+                <legend class="section-title section-title--small">Credenziali di accesso</legend>
+
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-input" th:field="${credentials.username}" required/>
+                    <span class="form-error" th:if="${#fields.hasErrors('credentials.username')}" th:errors="${credentials.username}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password (min. 6 caratteri)</label>
+                    <input type="password" class="form-input" th:field="${credentials.password}" required/>
+                    <span class="form-error" th:if="${#fields.hasErrors('credentials.password')}" th:errors="${credentials.password}"></span>
+                </div>
+            </fieldset>
+
+            <div class="form-actions mt-4">
+                <button type="submit" class="btn btn-primary">Registrati</button>
+            </div>
+        </form>
+
+        <p class="section-desc mt-4">Hai già un account? <a href="/login" class="text-accent">Accedi</a></p>
+    </section>
+</main>
 
 </body>
 </html>

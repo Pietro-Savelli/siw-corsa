@@ -1,30 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Aggiungi scarpa</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Aggiungi scarpa — SIW Corsa')}"></head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<h1>Aggiungi una scarpa</h1>
 
-<form th:action="@{/scarpe/nuova}" th:object="${scarpa}" method="post">
+<main class="main-container">
+    <section class="section">
+        <div class="section-header">
+            <h1 class="page-title">Aggiungi una scarpa</h1>
+        </div>
 
-    <label>Marca
-        <input type="text" th:field="*{marca}" placeholder="es. Brooks, Nike, Saucony" required/>
-    </label><br/>
+        <form th:action="@{/scarpe/nuova}" th:object="${scarpa}" method="post" class="max-w-600">
+            <div class="form-group">
+                <label class="form-label">Marca</label>
+                <input type="text" class="form-input" th:field="*{marca}" placeholder="es. Brooks, Nike, Saucony" required/>
+            </div>
 
-    <label>Modello
-        <input type="text" th:field="*{modello}" placeholder="es. Ghost 16, Endorphin Speed 4" required/>
-    </label><br/>
+            <div class="form-group">
+                <label class="form-label">Modello</label>
+                <input type="text" class="form-input" th:field="*{modello}" placeholder="es. Ghost 16, Endorphin Speed 4" required/>
+            </div>
 
-    <label>Km massimi consigliati
-        <input type="number" th:field="*{kmMassimi}" step="10" min="100" placeholder="es. 700" required/>
-    </label><br/>
+            <div class="form-group">
+                <label class="form-label">Km massimi consigliati</label>
+                <input type="number" class="form-input" th:field="*{kmMassimi}" step="10" min="100" placeholder="es. 700" required/>
+            </div>
 
-    <button type="submit">Salva scarpa</button>
-    <a href="/profilo">Annulla</a>
-</form>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Salva scarpa</button>
+                <a href="/profilo" class="btn btn-outline">Annulla</a>
+            </div>
+        </form>
+    </section>
+</main>
 
 </body>
 </html>
