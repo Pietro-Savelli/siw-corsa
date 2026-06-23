@@ -62,7 +62,7 @@ public class SocialController {
         model.addAttribute("userDetails", HomeController.getUserDetails());
         model.addAttribute("utenti", seguiti);
         model.addAttribute("titoloLista", "Persone che segui");
-        return "utenti/list";
+        return "utenti/seguiti";
     }
 
     // Lista di chi mi segue
@@ -77,7 +77,7 @@ public class SocialController {
         model.addAttribute("userDetails", HomeController.getUserDetails());
         model.addAttribute("utenti", follower);
         model.addAttribute("titoloLista", "Persone che ti seguono");
-        return "utenti/list";
+        return "utenti/follower";
     }
 
     /* ── Elenco di tutti gli utenti registrati, per trovare chi seguire ── */

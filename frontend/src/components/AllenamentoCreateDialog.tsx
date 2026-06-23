@@ -152,7 +152,21 @@ export default function AllenamentoCreateDialog({
     }
 
     return (
-        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            fullWidth
+            maxWidth="sm"
+            slotProps={{
+                paper: {
+                    sx: {
+                        backgroundColor: '#1e293b',
+                        color: 'white',
+                        border: '1px solid #334155'
+                    }
+                }
+            }}
+        >
             <DialogTitle>Registra nuovo allenamento</DialogTitle>
 
             <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 1 }}>
@@ -167,6 +181,16 @@ export default function AllenamentoCreateDialog({
                     helperText={erroriCampo.titolo}
                     disabled={inviando}
                     fullWidth
+                    sx={{
+                        '& .MuiInputLabel-root': { color: '#94a3b8' },
+                        '& .MuiInputLabel-root.Mui-focused': { color: '#f97316' },
+                        '& .MuiOutlinedInput-root': {
+                            color: 'white',
+                            '& fieldset': { borderColor: '#94a3b8' },
+                            '&:hover fieldset': { borderColor: '#f97316' },
+                            '&.Mui-focused fieldset': { borderColor: '#f97316' },
+                        }
+                    }}
                 />
 
                 <DatePicker
@@ -179,7 +203,18 @@ export default function AllenamentoCreateDialog({
                             fullWidth: true,
                             error: !!erroriCampo.data,
                             helperText: erroriCampo.data,
-                        },
+                            sx: {
+                                '& .MuiInputLabel-root': { color: '#94a3b8' },
+                                '& .MuiInputLabel-root.Mui-focused': { color: '#f97316' },
+                                '& .MuiOutlinedInput-root': {
+                                    color: 'white',
+                                    '& fieldset': { borderColor: '#334155' },
+                                    '&:hover fieldset': { borderColor: '#f97316' },
+                                    '&.Mui-focused fieldset': { borderColor: '#f97316' },
+                                },
+                                '& .MuiSvgIcon-root': { color: '#94a3b8' }, // L'icona del calendario
+                            }
+                        }
                     }}
                 />
 
@@ -193,6 +228,16 @@ export default function AllenamentoCreateDialog({
                     disabled={inviando}
                     slotProps={{ htmlInput: { step: 0.1, min: 0 } }}
                     fullWidth
+                    sx={{
+                        '& .MuiInputLabel-root': { color: '#94a3b8' },
+                        '& .MuiInputLabel-root.Mui-focused': { color: '#f97316' },
+                        '& .MuiOutlinedInput-root': {
+                            color: 'white',
+                            '& fieldset': { borderColor: '#94a3b8' },
+                            '&:hover fieldset': { borderColor: '#f97316' },
+                            '&.Mui-focused fieldset': { borderColor: '#f97316' },
+                        }
+                    }}
                 />
 
                 <FormControl disabled={inviando}>
@@ -205,12 +250,19 @@ export default function AllenamentoCreateDialog({
                         }
                     >
                         {tipi.map((tipo) => (
-                            <FormControlLabel key={tipo} value={tipo} control={<Radio />} label={tipo} />
+                            <FormControlLabel key={tipo} value={tipo} control={<Radio sx={{ color: '#94a3b8', '&.Mui-checked': { color: '#f97316' } }} />}
+                                              label={tipo} />
                         ))}
                     </RadioGroup>
                 </FormControl>
 
-                <FormControl fullWidth disabled={inviando}>
+                <FormControl fullWidth disabled={inviando} sx={{
+                    '& .MuiInputLabel-root.Mui-focused': { color: '#f97316' },
+                    '& .MuiOutlinedInput-root': {
+                        '&:hover fieldset': { borderColor: '#f97316' },
+                        '&.Mui-focused fieldset': { borderColor: '#f97316' },
+                    }
+                }}>
                     <InputLabel id="scarpa-label">Scarpa utilizzata (opzionale)</InputLabel>
                     <Select
                         labelId="scarpa-label"
@@ -235,10 +287,14 @@ export default function AllenamentoCreateDialog({
             </DialogContent>
 
             <DialogActions>
-                <Button onClick={handleClose} disabled={inviando}>
+                <Button onClick={handleClose} disabled={inviando} sx={{ color: '#94a3b8', '&:hover': { color: '#f97316' } }}>
                     Annulla
                 </Button>
-                <Button onClick={handleSubmit} variant="contained" disabled={inviando}>
+                <Button onClick={handleSubmit} variant="contained" disabled={inviando} sx={{
+                    backgroundColor: '#f97316',
+                    color: 'white',
+                    '&:hover': { backgroundColor: '#ea580c' }
+                }}>
                     {inviando ? <CircularProgress size={20} /> : "Salva allenamento"}
                 </Button>
             </DialogActions>

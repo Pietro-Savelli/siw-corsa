@@ -54,7 +54,25 @@ export default function App() {
 
             {/* Intestazione e Bottone Nuovo */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                <Button variant="contained" color="primary" onClick={() => setDialogAperto(true)}>
+                <Button
+                    variant="contained"
+                    onClick={() => setDialogAperto(true)}
+                    sx={{
+                        backgroundColor: '#f97316', /* Arancione solido infallibile */
+                        color: 'white',
+                        borderRadius: '9999px',     /* Pillola perfetta */
+                        padding: '8px 24px',
+                        fontWeight: 'bold',
+                        textTransform: 'none',
+                        boxShadow: '0 4px 10px rgba(249, 115, 22, 0.3)',
+                        transition: 'all 0.2s',
+                        '&:hover': {
+                            backgroundColor: '#ea580c', /* Arancione più scuro al passaggio del mouse */
+                            transform: 'translateY(-2px)',
+                            boxShadow: '0 6px 15px rgba(249, 115, 22, 0.5)',
+                        }
+                    }}
+                >
                     + Nuovo allenamento
                 </Button>
             </Box>
@@ -77,10 +95,10 @@ export default function App() {
                             transition: 'border-color 0.3s ease',
                         },
                         '&:hover fieldset': {
-                            borderColor: '#90caf9', // Azzurrino al passaggio del mouse
+                            borderColor: '#f97316', // Azzurrino al passaggio del mouse
                         },
                         '&.Mui-focused fieldset': {
-                            borderColor: '#90caf9', // Azzurrino quando è attivo
+                            borderColor: '#f97316', // Azzurrino quando è attivo
                             borderWidth: '2px',
                         },
                     },
@@ -103,9 +121,22 @@ export default function App() {
                         key={tipo}
                         label={tipo}
                         clickable
-                        color={filtroTipo === tipo ? "primary" : "default"}
                         onClick={() => setFiltroTipo(tipo)}
-                        sx={{ color: filtroTipo === tipo ? 'white' : 'gray' }}
+                        sx={{
+                            // Se è selezionato usa l'arancione, altrimenti sfondo trasparente
+                            backgroundColor: filtroTipo === tipo ? '#f97316' : 'transparent',
+                            // Se è selezionato testo bianco, altrimenti grigio chiaro
+                            color: filtroTipo === tipo ? 'white' : '#94a3b8',
+                            border: '1px solid',
+                            // Bordo arancione se selezionato, grigio se inattivo
+                            borderColor: filtroTipo === tipo ? '#f97316' : '#f97316',
+                            fontWeight: filtroTipo === tipo ? 'bold' : 'normal',
+                            transition: 'all 0.2s',
+                            '&:hover': {
+                                // Hover arancione scuro se già selezionato, altrimenti un grigio leggero
+                                backgroundColor: filtroTipo === tipo ? '#ea580c' : 'rgba(255, 255, 255, 0.08)'
+                            }
+                        }}
                     />
                 ))}
             </Box>
