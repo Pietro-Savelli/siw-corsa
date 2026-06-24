@@ -26,20 +26,6 @@
         <p class="hero-subtitle">
             Traccia i tuoi allenamenti, monitora le scarpe e commenta le uscite dei tuoi amici.
         </p>
-        <div class="hero-stats" th:if="${userDetails}">
-            <div class="stat-item">
-                <span th:text="${statistiche.kmTotali}">0</span>
-                <span class="stat-label">km totali</span>
-            </div>
-            <div class="stat-item">
-                <span th:text="${statistiche.numeroAllenamenti}">0</span>
-                <span class="stat-label">allenamenti</span>
-            </div>
-            <div class="stat-item">
-                <span th:text="${statistiche.numeroScarpe}">0</span>
-                <span class="stat-label">scarpe</span>
-            </div>
-        </div>
     </div>
 </header>
 

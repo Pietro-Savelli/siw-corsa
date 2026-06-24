@@ -59,6 +59,7 @@ public class SocialController {
         }
         List<Utente> seguiti = utenteService.getSeguiti(utenteCorrente.getId());
 
+        model.addAttribute("utenteCorrente", utenteCorrente);
         model.addAttribute("userDetails", HomeController.getUserDetails());
         model.addAttribute("utenti", seguiti);
         model.addAttribute("titoloLista", "Persone che segui");
@@ -93,11 +94,22 @@ public class SocialController {
     // Azioni Follow / Unfollow
     @PostMapping("/utenti/{id}/segui")
     public String segui(@PathVariable Long id,
-                        @RequestParam(defaultValue = "/utenti") String redirectTo) {
+                        @RequestParam(defaultValue = "/profilo") String redirectTo) {
         Utente utenteCorrente = credentialsService.getUtenteCorrente();
         if (utenteCorrente != null) {
             utenteService.segui(utenteCorrente.getId(), id);
             logger.info("L'utente {} {} ha iniziato a seguire l'utente ID: {}", utenteCorrente.getNome(), utenteCorrente.getCognome(), id);
+        }
+        return "redirect:" + redirectTo;
+    }
+
+    @PostMapping("/utenti/{id}/smetti-di-seguireS")
+    public String smettiDiSeguireS(@PathVariable Long id,
+                                  @RequestParam(defaultValue = "/profilo/seguiti") String redirectTo) {
+        Utente utenteCorrente = credentialsService.getUtenteCorrente();
+        if (utenteCorrente != null) {
+            utenteService.smettiDiSeguire(utenteCorrente.getId(), id);
+            logger.info("L'utente {} {} ha smesso di seguire l'utente ID: {}", utenteCorrente.getNome(), utenteCorrente.getCognome(), id);
         }
         return "redirect:" + redirectTo;
     }

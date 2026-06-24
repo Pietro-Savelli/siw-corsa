@@ -7,8 +7,8 @@
 <main class="main-container">
     <section class="section">
         <div class="section-header">
-            <h1 class="page-title" th:text="'🛡️ ' + ${squadra.nome}">Nome della Squadra</h1>
-            <p class="section-desc" th:if="${squadra.citta != null}" th:text="'📍 Sede: ' + ${squadra.citta}">Sede: Roma</p>
+            <h1 class="page-title" th:text=" ${squadra.nome}">Nome della Squadra</h1>
+            <p class="section-desc" th:if="${squadra.citta != null}" th:text="'Sede: ' + ${squadra.citta}">Sede: Roma</p>
         </div>
 
         <div class="actions-bar mt-4">
