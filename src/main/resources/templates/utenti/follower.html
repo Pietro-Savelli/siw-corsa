@@ -22,7 +22,6 @@
                 <tr>
                     <th>Nome</th>
                     <th>Email</th>
-                    <th>Azione</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -31,22 +30,10 @@
                         <a th:href="@{/utenti/{id}(id=${u.id})}" th:text="${u.nome} + ' ' + ${u.cognome}" class="text-accent font-semibold">Nome</a>
                     </td>
                     <td class="text-muted" th:text="${u.email}">email</td>
-                    <td>
-                        <form th:if="${userDetails != null}" th:action="@{/utenti/{id}/segui(id=${u.id})}" method="post" class="inline-form">
-                            <input type="hidden" name="redirectTo" value="/utenti"/>
-                            <button type="submit" class="btn btn-outline btn-small">
-                                <i class="fa-solid fa-plus"></i> Segui
-                            </button>
-                        </form>
-                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-
-        <p th:if="${userDetails == null}" class="section-desc mt-4">
-            <a href="/login" class="text-accent"><i class="fa-solid fa-right-to-bracket"></i> Accedi</a> per poter seguire altri atleti.
-        </p>
     </section>
 </main>
 

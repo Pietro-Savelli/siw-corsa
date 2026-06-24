@@ -32,7 +32,6 @@ public class HomeController {
             Credentials creds = credentialsService.findByUsername(userDetails.getUsername());
             if (creds != null) {
                 model.addAttribute("utente", creds.getUtente());
-                model.addAttribute("statistiche", homeService.statistiche(creds.getUtente().getId()));
             }
         }
 
